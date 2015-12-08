@@ -8,6 +8,7 @@ $db = new PDO(BDD_DSN, BDD_USER, BDD_PW);
 Model_Base::set_db($db);
 
 session_set_cookie_params(6000, '/', '', false, true);
+session_name('SESSION_ACALENDAR');
 session_start();
 date_default_timezone_set('Europe/Paris');
 
@@ -23,7 +24,7 @@ if(isset($_SERVER['PATH_INFO'])) {
 		$controller = $args[1];
 		$method = $args[2];
 		$params = array();
-		for ($i=3; $i < count($args); $i++) { 
+		for ($i=3; $i < count($args); $i++) {
 			$params[] = $args[$i];
 		}
 
@@ -46,7 +47,7 @@ if(isset($_SERVER['PATH_INFO'])) {
 		$_SESSION['message']['type'] = 'error';
 		$_SESSION['message']['text'] = 'Erreur 404 : Page non trouvée';
 		include 'views/home.php';
-		
+
 	}
 } else {
 	include 'views/home.php';
@@ -62,7 +63,7 @@ $content = ob_get_clean();
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="<?=BASEURL?>/css/normalize.css" type="text/css">
 	<link rel="stylesheet" href="<?=BASEURL?>/css/style.css" type="text/css">
-	<title> Notes </title>
+	<title> aCalendar </title>
 	<script> var baseurl = '<?=BASEURL?>'; </script>
 </head>
 <body>
