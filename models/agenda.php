@@ -10,28 +10,28 @@ class Agenda extends Model_Base
 
 	private $_nom;
 
-	private $_prenom;
+	private $_description;
 
-	private $_adresse;
+	private $_dateCreation;
 
-	private $_pseudo;
+	private $_dateUpdate;
 
-	private $_mdp;
+	private $_intersection;
 
-	private $_email;
+	private $_prive;
 
-	private $_dateInscription;
+	private $_partage;
 
-	public function __construct($idAgenda, $idUtilisateur, $nom, $prenom, $adresse, $pseudo, $mdp, $email, $dateInscription) {
+	public function __construct($idAgenda, $idUtilisateur, $nom, $description, $dateCreation, $dateUpdate, $intersection, $prive, $partage) {
 		$this->set_idAgenda($idAgenda);
 		$this->set_idUtilisateur($idUtilisateur);
 		$this->set_nom($nom);
-		$this->set_prenom($prenom);
-		$this->set_adresse($adresse);
-		$this->set_pseudo($pseudo);
-		$this->set_mdp($mdp);
-		$this->set_email($email);
-		$this->set_dateInscription($dateInscription);
+		$this->set_description($description);
+		$this->set_dateCreation($dateCreation);
+		$this->set_dateUpdate($dateUpdate);
+		$this->set_intersection($intersection);
+		$this->set_prive($prive);
+		$this->set_partage($partage);
 	}
 
 	//get
@@ -48,28 +48,28 @@ class Agenda extends Model_Base
 		return $this->_nom;
 	}
 
-	public function prenom() {
-		return $this->_prenom;
+	public function description() {
+		return $this->_description;
 	}
 
-	public function adresse() {
-		return $this->_adresse;
+	public function dateCreation() {
+		return $this->_dateCreation;
 	}
 
-	public function pseudo() {
-		return $this->_pseudo;
+	public function dateUpdate() {
+		return $this->_dateUpdate;
 	}
 
-	public function mdp() {
-		return $this->_mdp;
+	public function intersection() {
+		return $this->_intersection;
 	}
 
-	public function email() {
-		return $this->_email;
+	public function prive() {
+		return $this->_prive;
 	}
 
-	public function dateInscription() {
-		return $this->_dateInscription;
+	public function partage() {
+		return $this->_partage;
 	}
 
 	//set
@@ -86,91 +86,104 @@ class Agenda extends Model_Base
 		$this->_nom = strval($v);
 	}
 
-	public function set_prenom($v) {
-		$this->_prenom = strval($v);
+	public function set_description($v) {
+		$this->_description = strval($v);
 	}
 
-	public function set_adresse($v) {
-		$this->_adresse = strval($v);
+	public function set_dateCreation($v) {
+		$this->_dateCreation = strval($v);
 	}
 
-	public function set_pseudo($v) {
-		$this->_pseudo = strval($v);
+	public function set_dateUpdate($v) {
+		$this->_dateUpdate = strval($v);
 	}
 
-	public function set_mdp($v) {
-		$this->_mdp = strval($v);
+	public function set_intersection($v) {
+		$this->_intersection = strval($v);
 	}
 
-	public function set_email($v) {
-		$this->_email = strval($v);
+	public function set_prive($v) {
+		$this->_prive = strval($v);
 	}
 
-	public function set_dateInscription($v) {
-		$this->_dateInscription = strval($v);
+	public function set_partage($v) {
+		$this->_partage = strval($v);
 	}
 
 	public function add() {
-		if(!is_null($this->_id)) {
-			$q = self::$_db->prepare('INSERT INTO UTILISATEUR (idUtilisateur, nom, prenom, adresse, pseudo, mdp, email) VALUES (:nom, :prenom, :adresse, :pseudo, :mdp, :email)');
+		if(!is_null($this->_idAgenda)) {
+			$q = self::$_db->prepare('INSERT INTO AGENDA (idAgenda, idUtilisateur, nom, description, intersection, prive, partage) VALUES (seq_agenda.nextval, :id, :nom, :description, :intersection, :prive, :partage)');
+			$q->bindValue(':id', $this->_idUtilisateur, PDO::PARAM_INT);
 			$q->bindValue(':nom', $this->_nom, PDO::PARAM_STR);
-			$q->bindValue(':prenom', $this->_prenom, PDO::PARAM_STR);
-			$q->bindValue(':adresse', $this->_adresse, PDO::PARAM_STR);
-			$q->bindValue(':pseudo', $this->_pseudo, PDO::PARAM_STR);
-			$q->bindValue(':mdp', $this->_mdp, PDO::PARAM_STR);
-			$q->bindValue(':email', $this->_email, PDO::PARAM_STR);
+			$q->bindValue(':description', $this->_description, PDO::PARAM_STR);
+			$q->bindValue(':intersection', $this->_intersection, PDO::PARAM_STR);
+			$q->bindValue(':prive', $this->_prive, PDO::PARAM_STR);
+			$q->bindValue(':partage', $this->_partage, PDO::PARAM_STR);
 			$q->execute();
 		}
 	}
 
 	public function save()
 	{
-		if(!is_null($this->_id)) {
-			$q = self::$_db->prepare('UPDATE UTILISATEUR SET pseudo=:pseudo, mdp=:mdp WHERE idAgenda = :id');
+		if(!is_null($this->_idAgenda)) {
+			$q = self::$_db->prepare('UPDATE AGENDA SET nom=:nom, description=:description, dateUpdate=:dateUpdate, intersection=:intersection, prive=:prive, partage=:partage WHERE idAgenda = :id');
 			$q->bindValue(':id', $this->_idAgenda, PDO::PARAM_INT);
-			$q->bindValue(':pseudo', $this->_pseudo, PDO::PARAM_STR);
-			$q->bindValue(':mdp', $this->_mdp, PDO::PARAM_STR);
+			$q->bindValue(':nom', $this->_nom, PDO::PARAM_STR);
+			$q->bindValue(':description', $this->_description, PDO::PARAM_STR);
+			$q->bindValue(':dateUpdate', $this->_dateUpdate, PDO::PARAM_STR);
+			$q->bindValue(':intersection', $this->_intersection, PDO::PARAM_STR);
+			$q->bindValue(':prive', $this->_prive, PDO::PARAM_STR);
+			$q->bindValue(':partage', $this->_partage, PDO::PARAM_STR);
 			$q->execute();
 		}
 	}
 
 	public function delete()
 	{
-		if(!is_null($this->_id)) {
-			$q = self::$_db->prepare('DELETE FROM UTILISATEUR WHERE idUtilisateur = :id');
+		if(!is_null($this->_idAgenda)) {
+			$q = self::$_db->prepare('DELETE FROM AGENDA WHERE idAgenda = :id');
+			$q->bindValue(':id', $this->_idAgenda);
+			$q->execute();
+			$this->_idAgenda = null;
+		}
+	}
+
+	public function delete_by_user()
+	{
+		if(!is_null($this->_idUtilisateur)) {
+			$q = self::$_db->prepare('DELETE FROM AGENDA WHERE idUtilisateur = :id');
 			$q->bindValue(':id', $this->_idUtilisateur);
 			$q->execute();
-			$this->_id = null;
+			$this->_idUtilisateur = null;
 		}
 	}
 
-	public static function get_by_login($pseudo) {
-		$s = self::$_db->prepare('SELECT * FROM UTILISATEUR where pseudo = :pseudo');
-		$s->bindValue(':pseudo', $pseudo, PDO::PARAM_STR);
+	public static function get_by_user($idUtilisateur) {
+		$s = self::$_db->prepare('SELECT * FROM AGENDA where idUtilisateur = :id');
+		$s->bindValue(':id', $idUtilisateur, PDO::PARAM_INT);
+		$s->execute();
+		$agendas = array();
+		while ($data = $s->fetch(PDO::FETCH_ASSOC)) {
+			$agendas[] = self::get_by_id($data['idAgenda']);
+		}
+		return $agendas;
+	}
+
+	public static function get_by_id($idAgenda) {
+		$s = self::$_db->prepare('SELECT * FROM AGENDA where idAgenda= :id');
+		$s->bindValue(':id', $idAgenda, PDO::PARAM_INT);
 		$s->execute();
 		$data = $s->fetch(PDO::FETCH_ASSOC);
 		if ($data) {
-			return new User($data['idUtilisateur'], $data['pseudo'], $data['mdp']);
+			return new Agenda($data['idAgenda'], $data['idUtilisateur'], $data['nom'], $data['description'], $data['dateCreation'], $data['dateUpdate'], $data['intersection'], $data['prive'], $data['partage']);
 		} else {
 			return null;
 		}
 	}
 
-	public static function get_by_id($id) {
-		$s = self::$_db->prepare('SELECT * FROM UTILISATEUR where idUtilisateur = :id');
-		$s->bindValue(':id', $id, PDO::PARAM_INT);
-		$s->execute();
-		$data = $s->fetch(PDO::FETCH_ASSOC);
-		if ($data) {
-			return new User($data['idUtilisateur'], $data['pseudo'], $data['mdp']);
-		} else {
-			return null;
-		}
-	}
-
-	public static function exist($login) {
-		$s = self::$_db->prepare('SELECT * FROM UTILISATEUR where pseudo = :pseudo');
-		$s->bindValue(':pseudo', $pseudo, PDO::PARAM_STR);
+	public static function exist($idAgenda) {
+		$s = self::$_db->prepare('SELECT * FROM AGENDA where idAgenda = :id');
+		$s->bindValue(':id', $idAgenda, PDO::PARAM_INT);
 		$s->execute();
 		$data = $s->fetch(PDO::FETCH_ASSOC);
 		if($data) {

@@ -100,8 +100,8 @@ class Utilisateur extends Model_Base
 	}
 
 	public function add() {
-		if(!is_null($this->_id)) {
-			$q = self::$_db->prepare('INSERT INTO UTILISATEUR (nom, prenom, adresse, pseudo, mdp, email) VALUES (:nom, :prenom, :adresse, :pseudo, :mdp, :email)');
+		if(!is_null($this->_idUtilisateur)) {
+			$q = self::$_db->prepare('INSERT INTO UTILISATEUR (idUtilisateur, nom, prenom, adresse, pseudo, mdp, email) VALUES (seq_utilisateur.nextval, :nom, :prenom, :adresse, :pseudo, :mdp, :email)');
 			$q->bindValue(':nom', $this->_nom, PDO::PARAM_STR);
 			$q->bindValue(':prenom', $this->_prenom, PDO::PARAM_STR);
 			$q->bindValue(':adresse', $this->_adresse, PDO::PARAM_STR);
@@ -114,7 +114,7 @@ class Utilisateur extends Model_Base
 
 	public function save()
 	{
-		if(!is_null($this->_id)) {
+		if(!is_null($this->_idUtilisateur)) {
 			$q = self::$_db->prepare('UPDATE UTILISATEUR SET nom=:nom, prenom=:prenom, adresse=:adresse, pseudo=:pseudo, mdp=:mdp, email=:email WHERE idUtilisateur = :id');
 			$q->bindValue(':id', $this->_idUtilisateur, PDO::PARAM_INT);
 			$q->bindValue(':nom', $this->_nom, PDO::PARAM_STR);
@@ -130,11 +130,11 @@ class Utilisateur extends Model_Base
 
 	public function delete()
 	{
-		if(!is_null($this->_id)) {
+		if(!is_null($this->_idUtilisateur)) {
 			$q = self::$_db->prepare('DELETE FROM UTILISATEUR WHERE idUtilisateur = :id');
-			$q->bindValue(':id', $this->_idUtilisateur);
+			$q->bindValue(':id', $this->_idUtilisateur, PDO::PARAM_INT);
 			$q->execute();
-			$this->_id = null;
+			$this->_idUtilisateur = null;
 		}
 	}
 
@@ -150,9 +150,9 @@ class Utilisateur extends Model_Base
 		}
 	}
 
-	public static function get_by_id($id) {
+	public static function get_by_id($idUtilisateur) {
 		$s = self::$_db->prepare('SELECT * FROM UTILISATEUR where idUtilisateur = :id');
-		$s->bindValue(':id', $id, PDO::PARAM_INT);
+		$s->bindValue(':id', $idUtilisateur, PDO::PARAM_INT);
 		$s->execute();
 		$data = $s->fetch(PDO::FETCH_ASSOC);
 		if ($data) {
@@ -162,7 +162,7 @@ class Utilisateur extends Model_Base
 		}
 	}
 
-	public static function exist($login) {
+	public static function exist($pseudo) {
 		$s = self::$_db->prepare('SELECT * FROM UTILISATEUR where pseudo = :pseudo');
 		$s->bindValue(':pseudo', $pseudo, PDO::PARAM_STR);
 		$s->execute();
