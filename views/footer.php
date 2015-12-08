@@ -1,4 +1,4 @@
 <footer>
-	<p>W31 - by Jordan Lang</p>
-	<p>IUT Robert Schuman</p>
+	<p>aCalendar WEB PROJECT - Henry Romain && Lang Jordan </p>
+	<p>UFR Mathématique-Informatique</p>
 </footer>

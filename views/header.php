@@ -1,4 +1,4 @@
 <header>
-	<h1>Memolizer</h1>
-	<p>Take, Backup and Share !</p>
+	<h1>aCalendar</h1>
+	<p>Create, subscribe and Share !</p>
 </header>
