@@ -126,11 +126,10 @@ class Agenda extends Model_Base
 	public function save()
 	{
 		if(!is_null($this->_idAgenda)) {
-			$q = self::$_db->prepare('UPDATE AGENDA SET nom=:nom, description=:description, dateUpdate=:dateUpdate, intersection=:intersection, prive=:prive, partage=:partage WHERE idAgenda = :id');
+			$q = self::$_db->prepare('UPDATE AGENDA SET nom=:nom, description=:description, dateUpdate=sysdate, intersection=:intersection, prive=:prive, partage=:partage WHERE idAgenda = :id');
 			$q->bindValue(':id', $this->_idAgenda, PDO::PARAM_INT);
 			$q->bindValue(':nom', $this->_nom, PDO::PARAM_STR);
 			$q->bindValue(':description', $this->_description, PDO::PARAM_STR);
-			$q->bindValue(':dateUpdate', $this->_dateUpdate, PDO::PARAM_STR);
 			$q->bindValue(':intersection', $this->_intersection, PDO::PARAM_STR);
 			$q->bindValue(':prive', $this->_prive, PDO::PARAM_STR);
 			$q->bindValue(':partage', $this->_partage, PDO::PARAM_STR);
