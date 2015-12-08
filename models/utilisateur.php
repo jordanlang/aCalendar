@@ -20,15 +20,10 @@ class Utilisateur extends Model_Base
 
 	private $_dateInscription;
 
-	public function __construct($idUtilisateur, $nom, $prenom, $adresse, $pseudo, $mdp, $email, $dateInscription) {
+	public function __construct($idUtilisateur, $pseudo, $mdp) {
 		$this->set_idUtilisateur($idUtilisateur);
-		$this->set_nom($nom);
-		$this->set_prenom($prenom);
-		$this->set_adresse($adresse);
 		$this->set_pseudo($pseudo);
 		$this->set_mdp($mdp);
-		$this->set_email($email);
-		$this->set_dateInscription($dateInscription);
 	}
 
 	//get
