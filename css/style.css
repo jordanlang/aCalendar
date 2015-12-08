@@ -1,0 +1,178 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto:300,400,500,700);
+
+* {
+	-webkit-box-sizing: border-box;
+	   -moz-box-sizing: border-box;
+	        box-sizing: border-box;
+}
+
+html {
+	font-size: 62.5%;
+}
+
+body {
+	font-family: 'Roboto', sans-serif;
+	font-weight: 300;
+	font-size: 1.6rem;
+	margin: 0;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+header {
+	background-color: rgb(200,240,200);
+	text-align: center;
+	border-bottom: 1px solid black;
+}
+
+header h1 {
+	font-weight: 300;
+	font-size: 8.0rem;
+	margin: 0;
+}
+
+nav {
+	border-bottom: 1px solid black;
+	text-align: center;
+}
+
+nav ul {
+	list-style-type: none;
+	background-color: gray;
+	padding: 0;
+	margin: 0;
+}
+
+nav li {
+	display: inline-block;
+	margin: 0 0.25rem;
+	background-color: white;
+}
+
+nav a {
+	display: block;
+	padding: 1rem 3rem;
+	color: black;
+}
+nav a:hover {
+	background-color: rgb(240,150,80);
+}
+
+main {
+	flex: 1;
+	width: 50%;
+	margin: auto;
+}
+
+@media screen and (max-width: 1080px) {
+	main {
+		width: 80%;
+	}
+}
+
+@media screen and (max-width: 640px) {
+	main {
+		width: 95%;
+	}
+}
+
+footer {
+	background-color: rgb(200,240,200);
+	padding: 20px;
+	font-size: 1.2rem;
+	text-align: center;
+	border-top: 1px solid black;
+}
+
+footer p {
+	margin: 0;
+}
+
+
+
+
+
+a {
+	text-decoration: none;
+	color: rgb(240,150,80);
+}
+a:hover {
+	font-weight: 400;
+	text-decoration: underline;
+}
+
+.message {
+	width: 75%;
+	margin: 2rem auto 0;
+	padding: 1rem;
+	border: 1px solid black;
+}
+
+.error {
+	color: red;
+}
+.success {
+	color: green;
+}
+
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+.text-small { font-size: 0.75em; }
+.text-xsmall { font-size: 0.5em; }
+
+.subtitle {
+	display: block;
+	font-size: 90%;
+	font-weight: 300;
+	margin-left: 1rem;
+}
+
+form {
+	/*width: 50%;*/
+	margin: 2rem auto;
+	padding: 2rem;
+	border: 1px solid black;
+}
+form.noborder {
+	border: none;
+}
+
+.formline {
+	display: flex;
+}
+.formline:not(:last-child) {
+	margin-bottom: 1rem;
+}
+.formline label {
+	flex: 1;
+	text-align: right;
+	padding-right: 1rem;
+}
+.formline input {
+	flex: 3;
+}
+.formline textarea {
+	flex: 3;
+}
+
+h1, h2, h3 {
+	font-weight: 400;
+	margin-bottom: 0.5em;
+}
+
+ul.squarelist {
+	display: flex;
+	flex-direction: line;
+	flex-wrap: wrap;
+	justify-content: center;
+	list-style-type: none;
+	padding: 0;
+}
+ul.squarelist li {
+	flex: 0 1 20rem;
+	padding: 0 1rem;
+	margin: 1rem;
+	border: 1px solid black;
+}
