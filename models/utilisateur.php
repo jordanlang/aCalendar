@@ -4,51 +4,110 @@ require_once 'base.php';
 
 class User extends Model_Base
 {
-	private $_id;
+	private $_idUtilisateur;
 
-	private $_login;
+	private $_nom;
 
-	private $_password;
+	private $_prenom;
 
-	public function __construct($id, $login, $password) {
-		$this->set_id($id);
-		$this->set_login($login);
-		$this->set_password($password);
+	private $_adresse;
+
+	private $_pseudo;
+
+	private $_mdp;
+
+	private $_email;
+
+	private $_dateInscription;
+
+	public function __construct($idUtilisateur, $nom, $prenom, $adresse, $pseudo, $mdp, $email, $dateInscription) {
+		$this->set_idUtilisateur($idUtilisateur);
+		$this->set_nom($nom);
+		$this->set_prenom($prenom);
+		$this->set_adresse($adresse);
+		$this->set_pseudo($pseudo);
+		$this->set_mdp($mdp);
+		$this->set_email($email);
+		$this->set_dateInscription($dateInscription);
 	}
 
 	//get
 
-	public function id() {
-		return $this->_id;
+	public function idUtilisateur() {
+		return $this->_idUtilisateur;
 	}
 
-	public function login() {
-		return $this->_login;
+	public function nom() {
+		return $this->_nom;
 	}
 
-	public function password() {
-		return $this->_password;
+	public function prenom() {
+		return $this->_prenom;
+	}
+
+	public function adresse() {
+		return $this->_adresse;
+	}
+
+	public function pseudo() {
+		return $this->_pseudo;
+	}
+
+	public function mdp() {
+		return $this->_mdp;
+	}
+
+	public function email() {
+		return $this->_email;
+	}
+
+	public function dateInscription() {
+		return $this->_dateInscription;
 	}
 
 	//set
 
-	public function set_id($v) {
-		$this->_id = (int) $v;
+	public function set_idUtilisateur($v) {
+		$this->_idUtilisateur = (int) $v;
 	}
 
-	public function set_login($v) {
-		$this->_login = strval($v);
+	public function set_nom($v) {
+		$this->_nom = strval($v);
 	}
 
-	public function set_password($v) {
-		$this->_password = strval($v);
+	public function set_prenom($v) {
+		$this->_prenom = strval($v);
+	}
+
+	public function set_adresse($v) {
+		$this->_adresse = strval($v);
+	}
+
+	public function set_pseudo($v) {
+		$this->_pseudo = strval($v);
+	}
+
+	public function set_mdp($v) {
+		$this->_mdp = strval($v);
+	}
+
+	public function set_email($v) {
+		$this->_email = strval($v);
+	}
+
+	public function set_dateInscription($v) {
+		$this->_dateInscription = strval($v);
 	}
 
 	public function add() {
 		if(!is_null($this->_id)) {
-			$q = self::$_db->prepare('INSERT INTO users (login, mdp) VALUES (:login, :password)');
-			$q->bindValue(':login', $this->_login, PDO::PARAM_STR);
-			$q->bindValue(':password', $this->_password, PDO::PARAM_STR);
+			$q = self::$_db->prepare('INSERT INTO UTILISATEUR (nom, prenom, adresse, pseudo, mdp, email) VALUES (:nom, :prenom, :adresse, :pseudo, :mdp, :email)');
+			$q->bindValue(':nom', $this->_nom, PDO::PARAM_STR);
+			$q->bindValue(':prenom', $this->_prenom, PDO::PARAM_STR);
+			$q->bindValue(':adresse', $this->_adresse, PDO::PARAM_STR);
+			$q->bindValue(':pseudo', $this->_pseudo, PDO::PARAM_STR);
+			$q->bindValue(':mdp', $this->_mdp, PDO::PARAM_STR);
+			$q->bindValue(':email', $this->_email, PDO::PARAM_STR);
 			$q->execute();
 		}
 	}
@@ -56,10 +115,10 @@ class User extends Model_Base
 	public function save()
 	{
 		if(!is_null($this->_id)) {
-			$q = self::$_db->prepare('UPDATE users SET login=:login, mdp=:password WHERE id = :id');
-			$q->bindValue(':id', $this->_id, PDO::PARAM_INT);
-			$q->bindValue(':login', $this->_login, PDO::PARAM_STR);
-			$q->bindValue(':password', $this->_password, PDO::PARAM_STR);
+			$q = self::$_db->prepare('UPDATE UTILISATEUR SET pseudo=:pseudo, mdp=:mdp WHERE idUtilisateur = :id');
+			$q->bindValue(':id', $this->_idUtilisateur, PDO::PARAM_INT);
+			$q->bindValue(':pseudo', $this->_pseudo, PDO::PARAM_STR);
+			$q->bindValue(':mdp', $this->_mdp, PDO::PARAM_STR);
 			$q->execute();
 		}
 	}
@@ -67,40 +126,40 @@ class User extends Model_Base
 	public function delete()
 	{
 		if(!is_null($this->_id)) {
-			$q = self::$_db->prepare('DELETE FROM users WHERE id = :id');
-			$q->bindValue(':id', $this->_id);
+			$q = self::$_db->prepare('DELETE FROM UTILISATEUR WHERE idUtilisateur = :id');
+			$q->bindValue(':id', $this->_idUtilisateur);
 			$q->execute();
 			$this->_id = null;
 		}
 	}
 
-	public static function get_by_login($login) {
-		$s = self::$_db->prepare('SELECT * FROM users where login = :l');
-		$s->bindValue(':l', $login, PDO::PARAM_STR);
+	public static function get_by_login($pseudo) {
+		$s = self::$_db->prepare('SELECT * FROM UTILISATEUR where pseudo = :pseudo');
+		$s->bindValue(':pseudo', $pseudo, PDO::PARAM_STR);
 		$s->execute();
 		$data = $s->fetch(PDO::FETCH_ASSOC);
 		if ($data) {
-			return new User($data['id'], $data['login'], $data['mdp']);
+			return new User($data['idUtilisateur'], $data['pseudo'], $data['mdp']);
 		} else {
 			return null;
 		}
 	}
 
 	public static function get_by_id($id) {
-		$s = self::$_db->prepare('SELECT * FROM users where id = :i');
-		$s->bindValue(':i', $id, PDO::PARAM_INT);
+		$s = self::$_db->prepare('SELECT * FROM UTILISATEUR where idUtilisateur = :id');
+		$s->bindValue(':id', $id, PDO::PARAM_INT);
 		$s->execute();
 		$data = $s->fetch(PDO::FETCH_ASSOC);
 		if ($data) {
-			return new User($data['id'], $data['login'], $data['mdp']);
+			return new User($data['idUtilisateur'], $data['pseudo'], $data['mdp']);
 		} else {
 			return null;
 		}
 	}
 
 	public static function exist($login) {
-		$s = self::$_db->prepare('SELECT * FROM users where login = :l');
-		$s->bindValue(':l', $login, PDO::PARAM_STR);
+		$s = self::$_db->prepare('SELECT * FROM UTILISATEUR where pseudo = :pseudo');
+		$s->bindValue(':pseudo', $pseudo, PDO::PARAM_STR);
 		$s->execute();
 		$data = $s->fetch(PDO::FETCH_ASSOC);
 		if($data) {
