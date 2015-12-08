@@ -82,8 +82,6 @@ class Controller_User
 							 
 							$u = new Utilisateur(1, htmlspecialchars($_POST['login']), sha1($_POST['pw']));
 							if(isset($_POST['nom'])) {
-								$message="ok";
-							echo '<script type="text/javascript">window.alert("'.$message.'");</script>';
 								$u->set_nom(htmlspecialchars($_POST['nom']));
 							}
 							if(isset($_POST['prenom'])) {
