@@ -32,8 +32,13 @@ class Controller_User
 
 			case 'POST' :
 				if (isset($_POST['login']) && isset($_POST['pw'])) {
+					
 					$u = Utilisateur::get_by_login(htmlspecialchars($_POST['login']));
 					if (!is_null($u)) {
+						$message=$_POST['pw'];
+echo '<script type="text/javascript">window.alert("'.$message.'");</script>';
+						$message=$u->pseudo();
+echo '<script type="text/javascript">window.alert("'.$message.'");</script>';
 						if ($u->mdp() == sha1($_POST['pw']))
 						{
 							$_SESSION['user'] = $u->pseudo();
@@ -79,8 +84,13 @@ class Controller_User
 					if (!$exist) {
 						if($_POST['pw'] == $_POST['pwConfirm']) {
 							//Fonction sha1 permet crypté le mot de passe
-							 
-							$u = new Utilisateur(1, htmlspecialchars($_POST['login']), sha1($_POST['pw']));
+							/*$message='Voici un message en javascript écrit par php'; 
+echo '<script type="text/javascript">window.alert("'.$message.'");</script>'; */
+							$u = new Utilisateur(1, NULL, NULL, NULL, htmlspecialchars($_POST['login']), sha1($_POST['pw']), NULL, NULL);
+							/*$_POST['nom'] = "Jordan";
+							$_POST['prenom'] = "Coucou";
+							$_POST['adresse'] = "sgifren";
+							$_POST['email'] = "hcueiuc";*/
 							if(isset($_POST['nom'])) {
 								$u->set_nom(htmlspecialchars($_POST['nom']));
 							}

@@ -20,10 +20,15 @@ class Utilisateur extends Model_Base
 
 	private $_dateInscription;
 
-	public function __construct($idUtilisateur, $pseudo, $mdp) {
+	public function __construct($idUtilisateur, $nom, $prenom, $adresse, $pseudo, $mdp, $email, $dateInscription) {
 		$this->set_idUtilisateur($idUtilisateur);
+		$this->set_nom($nom);
+		$this->set_prenom($prenom);
+		$this->set_adresse($adresse);
 		$this->set_pseudo($pseudo);
 		$this->set_mdp($mdp);
+		$this->set_email($email);
+		$this->set_dateInscription($dateInscription);
 	}
 
 	//get
@@ -134,12 +139,16 @@ class Utilisateur extends Model_Base
 	}
 
 	public static function get_by_login($pseudo) {
+		$message="ok1";
+echo '<script type="text/javascript">window.alert("'.$message.'");</script>';
 		$s = self::$_db->prepare('SELECT * FROM UTILISATEUR where pseudo = :pseudo');
 		$s->bindValue(':pseudo', $pseudo, PDO::PARAM_STR);
 		$s->execute();
 		$data = $s->fetch(PDO::FETCH_ASSOC);
 		if ($data) {
-			return new User($data['idUtilisateur'], $data['pseudo'], $data['mdp']);
+			$message=$data['MDP'];
+echo '<script type="text/javascript">window.alert("'.$message.'");</script>';
+			return new Utilisateur($data['idUtilisateur'], $data['nom'], $data['prenom'], $data['adresse'], $data['pseudo'], $data['MDP'], $data['email'], $data['dateInscription']);
 		} else {
 			return null;
 		}
@@ -151,7 +160,7 @@ class Utilisateur extends Model_Base
 		$s->execute();
 		$data = $s->fetch(PDO::FETCH_ASSOC);
 		if ($data) {
-			return new User($data['idUtilisateur'], $data['pseudo'], $data['mdp']);
+			return new Utilisateur($data['idUtilisateur'], $data['nom'], $data['prenom'], $data['adresse'], $data['pseudo'], $data['mdp'], $data['email'], $data['dateInscription']);
 		} else {
 			return null;
 		}
