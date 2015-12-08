@@ -59,7 +59,7 @@ class Agenda extends Model_Base
 
 	public function add() {
 		if(!is_null($this->_id)) {
-			$q = self::$_db->prepare('INSERT INTO ACTIVITE (idUtilisateur, idActivite,
+			$q = self::$_db->prepare('INSERT INTO EVALUATION(idUtilisateur,idActivite,
         note, dateEval) VALUES (:idUtilisateur,:idActivite,:note, :dateEval)');
       $q->bindValue(':idUtilisateur', $this->_idUtilisateur, PDO::PARAM_INT);
       $q->bindValue(':idActivite', $this->_idActivite, PDO::PARAM_INT);
@@ -72,7 +72,7 @@ class Agenda extends Model_Base
 	public function delete()
 	{
 		if(!is_null($this->_id)) {
-			$q = self::$_db->prepare('DELETE FROM ACTIVITE WHERE idActivite = :id');
+			$q = self::$_db->prepare('DELETE FROM EVALUATION WHERE idActivite = :id');
 			$q->bindValue(':id', $this->_idActivite);
 			$q->execute();
 			$this->_id = null;
@@ -80,7 +80,7 @@ class Agenda extends Model_Base
 	}
 
 	public static function get_by_idActivite($idActivite) {
-		$s = self::$_db->prepare('SELECT * FROM ACTIVITE
+		$s = self::$_db->prepare('SELECT * FROM EVALUATION
       where idActivite = :id');
 		$s->bindValue(':id', $idActivite, PDO::PARAM_INT);
 		$s->execute();
@@ -95,7 +95,8 @@ class Agenda extends Model_Base
 	}
 
 	public static function get_by_idUtilisateur($id) {
-		$s = self::$_db->prepare('SELECT * FROM ACTIVITE where idUtilisateur=:id');
+		$s = self::$_db->prepare('SELECT * FROM EVALUATION where idUtilisateur=:id')
+    ;
 		$s->bindValue(':id', $id, PDO::PARAM_INT);
 		$s->execute();
     $evaluations = array();
@@ -109,7 +110,7 @@ class Agenda extends Model_Base
 	}
 
   public static function get_by_ids($idUtilisateur,$idActivite) {
-		$s = self::$_db->prepare('SELECT * FROM ACTIVITE
+		$s = self::$_db->prepare('SELECT * FROM EVALUATION
       where idActivite = :idActivite AND idUtilisateur =:idUtilisateur');
 		$s->bindValue(':idActivite', $idActivite, PDO::PARAM_INT);
     $s->bindValue(':idUtilisateur', $idUtilisateur, PDO::PARAM_INT);
