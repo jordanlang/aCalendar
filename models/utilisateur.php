@@ -2,7 +2,7 @@
 
 require_once 'base.php';
 
-class User extends Model_Base
+class Utilisateur extends Model_Base
 {
 	private $_idUtilisateur;
 
@@ -115,10 +115,15 @@ class User extends Model_Base
 	public function save()
 	{
 		if(!is_null($this->_id)) {
-			$q = self::$_db->prepare('UPDATE UTILISATEUR SET pseudo=:pseudo, mdp=:mdp WHERE idUtilisateur = :id');
+			$q = self::$_db->prepare('UPDATE UTILISATEUR SET nom=:nom, prenom=:prenom, adresse=:adresse, pseudo=:pseudo, mdp=:mdp, email=:email WHERE idUtilisateur = :id');
 			$q->bindValue(':id', $this->_idUtilisateur, PDO::PARAM_INT);
+			$q->bindValue(':nom', $this->_nom, PDO::PARAM_STR);
+			$q->bindValue(':prenom', $this->_prenom, PDO::PARAM_STR);
+			$q->bindValue(':adresse', $this->_adresse, PDO::PARAM_STR);
+			
 			$q->bindValue(':pseudo', $this->_pseudo, PDO::PARAM_STR);
 			$q->bindValue(':mdp', $this->_mdp, PDO::PARAM_STR);
+			$q->bindValue(':email', $this->_email, PDO::PARAM_STR);
 			$q->execute();
 		}
 	}
