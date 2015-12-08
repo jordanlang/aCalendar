@@ -136,15 +136,20 @@ create table A_ACTIVITE
 (
 	idActivite number(8) PRIMARY KEY,
 	idAgenda number(8) NOT NULL,
+	idCategorie number(8),
+	idSimilaire number(8),
 	titre varchar2(50),
 	descriptif varchar2(300),
 	posGeographique varchar2(50),
-	dateCreation date,
+	dateCreation date DEFAULT sysdate,
+	dateUpdate date DEFAULT sysdate,
 	dateDeb date,
 	dateFin date,
+	numSemaine number(2),
+	numJour number(1),
 	periodicite varchar2(1),
 	occurences number(8),
-	priorite number(8)
+	priorite number(8),
 );
 
 -- SEQUENCES :
@@ -177,9 +182,9 @@ CREATE OR REPLACE TRIGGER activiteSimilaire
 BEGIN
 	FOR curs IN (SELECT * FROM ACTIVITE WHERE idSimilaire = :new.idSimilaire)
 	LOOP
-		IF ((curs.idAgenda != :new.idAgenda) 
-			OR (curs.idCategorie != :new.idAgenda) 
-			OR (curs.titre != :new.titre) 
+		IF ((curs.idAgenda != :new.idAgenda)
+			OR (curs.idCategorie != :new.idAgenda)
+			OR (curs.titre != :new.titre)
 			OR (curs.descriptif != :new.descriptif)
 			OR (curs.posGeographique != :new.posGeographique)
 			OR (curs.periodicite != :new.periodicite)

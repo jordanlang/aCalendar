@@ -2,7 +2,7 @@
 
 require_once 'base.php';
 
-class Agenda extends Model_Base
+class Activite extends Model_Base
 {
 	private $_idActivite;
 
@@ -285,5 +285,58 @@ class Agenda extends Model_Base
 		} else {
 			return null;
 		}
+	}
+
+  public static function get_by_idAgenda($id) {
+		$s = self::$_db->prepare('SELECT * FROM ACTIVITE where idAgenda = :id');
+		$s->bindValue(':id', $id, PDO::PARAM_INT);
+		$s->execute();
+    $activites = array();
+		while($data = $s->fetch(PDO::FETCH_ASSOC)) {
+			$activites[] = new Activite($data['idActivite'],$data['idAgenda'],
+        $data['idCategorie'],$data['idSimilaire'],$data['titre'],
+        $data['descriptif'],$data['posGeographique'],$data['dateCreation'],
+        $data['dateUpdate'], $data['dateDeb'],$data['dateFin'],
+        $data['numSemaine'],$data['numJour'],$data['periodicite'],
+        $data['occurences'],$data['priorite']
+      );
+		}
+		return $activites;
+	}
+
+  public static function get_by_idUtilisateur($id) {
+    $s = self::$_db->prepare('SELECT * FROM ACTIVITE where idUtilisateur =:id');
+		$s->bindValue(':id', $id, PDO::PARAM_INT);
+		$s->execute();
+    $activites = array();
+		while($data = $s->fetch(PDO::FETCH_ASSOC)) {
+			$activites[] = new Activite($data['idActivite'],$data['idAgenda'],
+        $data['idCategorie'],$data['idSimilaire'],$data['titre'],
+        $data['descriptif'],$data['posGeographique'],$data['dateCreation'],
+        $data['dateUpdate'], $data['dateDeb'],$data['dateFin'],
+        $data['numSemaine'],$data['numJour'],$data['periodicite'],
+        $data['occurences'],$data['priorite']
+      );
+		}
+		return $activites;
+	}
+
+  public static function get_by_idUtilisateurAgenda($idUtilisateur,$idActivite){
+    $s = self::$_db->prepare('SELECT * FROM ACTIVITE
+      where idUtilisateur =:idUtil AND idAgenda=:idAgenda');
+		$s->bindValue(':idUtil', $idUtilisateur, PDO::PARAM_INT);
+    $s->bindValue(':idAgenda', $idAgenda, PDO::PARAM_INT);
+		$s->execute();
+    $activites = array();
+		while($data = $s->fetch(PDO::FETCH_ASSOC)) {
+			$activites[] = new Activite($data['idActivite'],$data['idAgenda'],
+        $data['idCategorie'],$data['idSimilaire'],$data['titre'],
+        $data['descriptif'],$data['posGeographique'],$data['dateCreation'],
+        $data['dateUpdate'], $data['dateDeb'],$data['dateFin'],
+        $data['numSemaine'],$data['numJour'],$data['periodicite'],
+        $data['occurences'],$data['priorite']
+      );
+		}
+		return $activites;
 	}
 }

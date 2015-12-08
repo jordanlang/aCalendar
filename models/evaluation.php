@@ -2,7 +2,7 @@
 
 require_once 'base.php';
 
-class Agenda extends Model_Base
+class Evaluation extends Model_Base
 {
 	private $_idUtilisateur;
 
