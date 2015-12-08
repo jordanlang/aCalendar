@@ -2,89 +2,123 @@
 
 require_once 'base.php';
 
-class Note extends Model_Base
+class Agenda extends Model_Base
 {
-	private $_id;
+	private $_idAgenda;
 
-	private $_title;
+	private $_idUtilisateur;
 
-	private $_content;
+	private $_nom;
 
-	private $_autor;
+	private $_prenom;
 
-	private $_lastEditer;
+	private $_adresse;
 
-	private $_addDate;
+	private $_pseudo;
 
-	public function __construct($id, $title, $content, $autor, $lastEditer, $addDate) {
-		$this->set_id($id);
-		$this->set_title($title);
-		$this->set_content($content);
-		$this->set_autor($autor);
-		$this->set_lastEditer($lastEditer);
-		$this->set_addDate($addDate);
+	private $_mdp;
+
+	private $_email;
+
+	private $_dateInscription;
+
+	public function __construct($idAgenda, $idUtilisateur, $nom, $prenom, $adresse, $pseudo, $mdp, $email, $dateInscription) {
+		$this->set_idAgenda($idAgenda);
+		$this->set_idUtilisateur($idUtilisateur);
+		$this->set_nom($nom);
+		$this->set_prenom($prenom);
+		$this->set_adresse($adresse);
+		$this->set_pseudo($pseudo);
+		$this->set_mdp($mdp);
+		$this->set_email($email);
+		$this->set_dateInscription($dateInscription);
 	}
 
 	//get
 
-	public function id() {
-		return $this->_id;
+	public function idAgenda() {
+		return $this->_idAgenda;
 	}
 
-	public function title() {
-		return $this->_title;
+	public function idUtilisateur() {
+		return $this->_idUtilisateur;
 	}
 
-	public function content() {
-		return $this->_content;
+	public function nom() {
+		return $this->_nom;
 	}
 
-	public function autor() {
-		return $this->_autor;
+	public function prenom() {
+		return $this->_prenom;
 	}
 
-	public function lastEditer() {
-		return $this->_lastEditer;
+	public function adresse() {
+		return $this->_adresse;
 	}
 
-	public function addDate() {
-		return $this->_addDate;
-	} 
+	public function pseudo() {
+		return $this->_pseudo;
+	}
+
+	public function mdp() {
+		return $this->_mdp;
+	}
+
+	public function email() {
+		return $this->_email;
+	}
+
+	public function dateInscription() {
+		return $this->_dateInscription;
+	}
 
 	//set
 
-	public function set_id($v) {
-		$this->_id = (int) $v;
+	public function set_idAgenda($v) {
+		$this->_idAgenda = (int) $v;
 	}
 
-	public function set_title($v) {
-		$this->_title = strval($v);
+	public function set_idUtilisateur($v) {
+		$this->_idUtilisateur = (int) $v;
 	}
 
-	public function set_content($v) {
-		$this->_content = strval($v);
+	public function set_nom($v) {
+		$this->_nom = strval($v);
 	}
 
-	public function set_autor($v) {
-		$this->_autor = strval($v);
+	public function set_prenom($v) {
+		$this->_prenom = strval($v);
 	}
 
-	public function set_lastEditer($v) {
-		$this->_lastEditer = strval($v);
+	public function set_adresse($v) {
+		$this->_adresse = strval($v);
 	}
 
-	public function set_addDate($v) {
-		$this->_addDate = strval($v);
+	public function set_pseudo($v) {
+		$this->_pseudo = strval($v);
+	}
+
+	public function set_mdp($v) {
+		$this->_mdp = strval($v);
+	}
+
+	public function set_email($v) {
+		$this->_email = strval($v);
+	}
+
+	public function set_dateInscription($v) {
+		$this->_dateInscription = strval($v);
 	}
 
 	public function add() {
 		if(!is_null($this->_id)) {
-			$q = self::$_db->prepare('INSERT INTO notes (title, content, autor, lastEditer, addDate) VALUES (:title, :content, :autor, :lastEditer, :addDate)');
-			$q->bindValue(':title', $this->_title, PDO::PARAM_STR);
-			$q->bindValue(':content', $this->_content, PDO::PARAM_STR);
-			$q->bindValue(':autor', $this->_autor, PDO::PARAM_STR);
-			$q->bindValue(':lastEditer', $this->_lastEditer, PDO::PARAM_STR);
-			$q->bindValue(':addDate', $this->_addDate, PDO::PARAM_STR);
+			$q = self::$_db->prepare('INSERT INTO UTILISATEUR (idUtilisateur, nom, prenom, adresse, pseudo, mdp, email) VALUES (:nom, :prenom, :adresse, :pseudo, :mdp, :email)');
+			$q->bindValue(':nom', $this->_nom, PDO::PARAM_STR);
+			$q->bindValue(':prenom', $this->_prenom, PDO::PARAM_STR);
+			$q->bindValue(':adresse', $this->_adresse, PDO::PARAM_STR);
+			$q->bindValue(':pseudo', $this->_pseudo, PDO::PARAM_STR);
+			$q->bindValue(':mdp', $this->_mdp, PDO::PARAM_STR);
+			$q->bindValue(':email', $this->_email, PDO::PARAM_STR);
 			$q->execute();
 		}
 	}
@@ -92,13 +126,10 @@ class Note extends Model_Base
 	public function save()
 	{
 		if(!is_null($this->_id)) {
-			$q = self::$_db->prepare('UPDATE notes SET title=:title, content=:content, autor=:autor, lastEditer=:lastEditer, addDate=:addDate WHERE id = :id');
-			$q->bindValue(':id', $this->_id, PDO::PARAM_INT);
-			$q->bindValue(':title', $this->_title, PDO::PARAM_STR);
-			$q->bindValue(':content', $this->_content, PDO::PARAM_STR);
-			$q->bindValue(':autor', $this->_autor, PDO::PARAM_STR);
-			$q->bindValue(':lastEditer', $this->_lastEditer, PDO::PARAM_STR);
-			$q->bindValue(':addDate', $this->_addDate, PDO::PARAM_STR);
+			$q = self::$_db->prepare('UPDATE UTILISATEUR SET pseudo=:pseudo, mdp=:mdp WHERE idAgenda = :id');
+			$q->bindValue(':id', $this->_idAgenda, PDO::PARAM_INT);
+			$q->bindValue(':pseudo', $this->_pseudo, PDO::PARAM_STR);
+			$q->bindValue(':mdp', $this->_mdp, PDO::PARAM_STR);
 			$q->execute();
 		}
 	}
@@ -106,45 +137,40 @@ class Note extends Model_Base
 	public function delete()
 	{
 		if(!is_null($this->_id)) {
-			$q = self::$_db->prepare('DELETE FROM notes WHERE id = :id');
-			$q->bindValue(':id', $this->_id);
+			$q = self::$_db->prepare('DELETE FROM UTILISATEUR WHERE idUtilisateur = :id');
+			$q->bindValue(':id', $this->_idUtilisateur);
 			$q->execute();
-			
-			$s = self::$_db->prepare('DELETE FROM shared WHERE idNote=:idNote');
-			$s->bindValue(':idNote', $this->_id, PDO::PARAM_INT);
-			$s->execute();
-
 			$this->_id = null;
 		}
 	}
 
-	public static function get_by_title($title) {
-		$s = self::$_db->prepare('SELECT * FROM notes where title = :t');
-		$s->bindValue(':t', $title, PDO::PARAM_STR);
+	public static function get_by_login($pseudo) {
+		$s = self::$_db->prepare('SELECT * FROM UTILISATEUR where pseudo = :pseudo');
+		$s->bindValue(':pseudo', $pseudo, PDO::PARAM_STR);
 		$s->execute();
 		$data = $s->fetch(PDO::FETCH_ASSOC);
 		if ($data) {
-			return new Note($data['id'], $data['title'], $data['content'], $data['autor'], $data['lastEditer'], $data['addDate']);
+			return new User($data['idUtilisateur'], $data['pseudo'], $data['mdp']);
 		} else {
 			return null;
 		}
 	}
 
 	public static function get_by_id($id) {
-		$s = self::$_db->prepare('SELECT * FROM notes where id = :i');
-		$s->bindValue(':i', $id, PDO::PARAM_INT);
+		$s = self::$_db->prepare('SELECT * FROM UTILISATEUR where idUtilisateur = :id');
+		$s->bindValue(':id', $id, PDO::PARAM_INT);
 		$s->execute();
 		$data = $s->fetch(PDO::FETCH_ASSOC);
 		if ($data) {
-			return new Note($data['id'], $data['title'], $data['content'], $data['autor'], $data['lastEditer'], $data['addDate']);
+			return new User($data['idUtilisateur'], $data['pseudo'], $data['mdp']);
 		} else {
 			return null;
 		}
 	}
 
-	public static function exist($title) {
-		$s = self::$_db->prepare('SELECT * FROM notes where title = :t');
-		$s->bindValue(':t', $title, PDO::PARAM_STR);
+	public static function exist($login) {
+		$s = self::$_db->prepare('SELECT * FROM UTILISATEUR where pseudo = :pseudo');
+		$s->bindValue(':pseudo', $pseudo, PDO::PARAM_STR);
 		$s->execute();
 		$data = $s->fetch(PDO::FETCH_ASSOC);
 		if($data) {
@@ -153,89 +179,5 @@ class Note extends Model_Base
 		else {
 			return false;
 		}
-	}
-
-	public static function shareExist($idNote, $idUser) {
-		$s = self::$_db->prepare('SELECT * FROM shared where idNote=:idNote and idUser=:idUser');
-		$s->bindValue(':idNote', $idNote, PDO::PARAM_INT);
-		$s->bindValue(':idUser', $idUser, PDO::PARAM_INT);
-		$s->execute();
-		$data = $s->fetch(PDO::FETCH_ASSOC);
-		if($data) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
-
-	public static function shareAdd($idNote, $idUser, $update, $delete) {
-		if(!(self::shareExist($idNote, $idUser))) {
-			$s = self::$_db->prepare('INSERT INTO shared (idNote, idUser, up, del) VALUES (:idNote, :idUser, :up, :del)');
-			$s->bindValue(':idNote', $idNote, PDO::PARAM_INT);
-			$s->bindValue(':idUser', $idUser, PDO::PARAM_INT);
-			$s->bindValue(':up', $update, PDO::PARAM_INT);
-			$s->bindValue(':del', $delete, PDO::PARAM_INT);
-			$s->execute();
-		}
-	}
-
-	public static function shareUpdate($idNote, $idUser, $update, $delete) {
-		if(self::shareExist($idNote, $idUser)) {
-			$s = self::$_db->prepare('UPDATE shared SET up=:up, del=:del WHERE idUser=:idUser and idNote=:idNote');
-			$s->bindValue(':idNote', $idNote, PDO::PARAM_INT);
-			$s->bindValue(':idUser', $idUser, PDO::PARAM_INT);
-			$s->bindValue(':up', $update, PDO::PARAM_INT);
-			$s->bindValue(':del', $delete, PDO::PARAM_INT);
-			$s->execute();
-		}
-	}
-
-	public static function shareDelete($idNote, $idUser) {
-		if(self::shareExist($idNote, $idUser)) {
-			$s = self::$_db->prepare('DELETE FROM shared WHERE idUser=:idUser and idNote=:idNote');
-			$s->bindValue(':idNote', $idNote, PDO::PARAM_INT);
-			$s->bindValue(':idUser', $idUser, PDO::PARAM_INT);
-			$s->execute();
-		}
-	}
-
-	public static function listNotes($user) {
-		$s = self::$_db->prepare('SELECT * FROM notes where autor = :a');
-		$s->bindValue(':a', $user, PDO::PARAM_STR);
-		$s->execute();
-		$data = $s->fetchAll(PDO::FETCH_ASSOC);
-		return $data;
-	}
-
-	public static function listSharedWithUser($user) {
-		$s = self::$_db->prepare('SELECT * FROM shared where idUser = (SELECT id FROM users WHERE login = :l)');
-		$s->bindValue(':l', $user, PDO::PARAM_STR);
-		$s->execute();
-		$data = $s->fetchAll(PDO::FETCH_ASSOC);
-		return $data;
-	}
-
-	public static function listUsersShared($idNote) {
-		$s = self::$_db->prepare('SELECT * FROM shared where idNote=:idNote');
-		$s->bindValue(':idNote', $idNote, PDO::PARAM_INT);
-		$s->execute();
-		$data = $s->fetchAll(PDO::FETCH_ASSOC);
-		return $data;
-	}
-
-	public static function listShare($idNote, $idUser) {
-		$s = self::$_db->prepare('SELECT * FROM shared where idNote=:idNote and idUser=:idUser');
-		$s->bindValue(':idNote', $idNote, PDO::PARAM_INT);
-		$s->bindValue(':idUser', $idUser, PDO::PARAM_INT);
-		$s->execute();
-		$data = $s->fetch(PDO::FETCH_ASSOC);
-		if($data) {
-			return $data;
-		}
-		else {
-			return 0;
-		}
-		
 	}
 }
