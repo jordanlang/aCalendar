@@ -181,7 +181,7 @@ class A_activite extends Model_Base
 	}
 
   public function set_periodicite($v) {
-		$this->_periodicite = strval($v);
+		$this->_periodicite = (int)($v);
 	}
 
   public function set_occurences($v) {

@@ -52,7 +52,7 @@ class Aimecomm extends Model_Base
 	}
 
 	public function set_aime($v) {
-		$this->_aime = strval($v);
+		$this->_aime = (int)($v);
 	}
 
 	public function add() {

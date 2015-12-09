@@ -99,15 +99,15 @@ class Agenda extends Model_Base
 	}
 
 	public function set_intersection($v) {
-		$this->_intersection = strval($v);
+		$this->_intersection = (int)($v);
 	}
 
 	public function set_prive($v) {
-		$this->_prive = strval($v);
+		$this->_prive = (int)($v);
 	}
 
 	public function set_partage($v) {
-		$this->_partage = strval($v);
+		$this->_partage = (int)($v);
 	}
 
 	public function add() {
