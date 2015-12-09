@@ -262,8 +262,8 @@ class Activite extends Model_Base
 		$s->execute();
 		$data = $s->fetch(PDO::FETCH_ASSOC);
 		if ($data) {
-			return new Activite($data['idAgenda'], $data['descriptif'],
-      $data['posGeographique']);
+			return new Activite($data['IDAGENDA'], $data['DESCRIPTIF'],
+      $data['POSGEOGRAPHIQUE']);
 		} else {
 			return null;
 		}
@@ -275,12 +275,12 @@ class Activite extends Model_Base
 		$s->execute();
 		$data = $s->fetch(PDO::FETCH_ASSOC);
 		if ($data) {
-			return new Activite($data['idActivite'],$data['idAgenda'],
-        $data['idCategorie'],$data['idSimilaire'],$data['titre'],
-        $data['descriptif'],$data['posGeographique'],$data['dateCreation'],
-        $data['dateUpdate'], $data['dateDeb'],$data['dateFin'],
-        $data['numSemaine'],$data['numJour'],$data['periodicite'],
-        $data['occurences'],$data['priorite']
+			return new Activite($data['IDACTIVITE'],$data['IDAGENDA'],
+        $data['IDCATEGORIE'],$data['IDSIMILAIRE'],$data['TITRE'],
+        $data['DESCRIPTIF'],$data['POSGEOGRAPHIQUE'],$data['DATECREATION'],
+        $data['DATEUPDATE'], $data['DATEDEB'],$data['DATEFIN'],
+        $data['NUMSEMAINE'],$data['NUMJOUR'],$data['PERIODICITE'],
+        $data['OCCURENCES'],$data['PRIORITE']
       );
 		} else {
 			return null;
@@ -293,12 +293,12 @@ class Activite extends Model_Base
 		$s->execute();
     $activites = array();
 		while($data = $s->fetch(PDO::FETCH_ASSOC)) {
-			$activites[] = new Activite($data['idActivite'],$data['idAgenda'],
-        $data['idCategorie'],$data['idSimilaire'],$data['titre'],
-        $data['descriptif'],$data['posGeographique'],$data['dateCreation'],
-        $data['dateUpdate'], $data['dateDeb'],$data['dateFin'],
-        $data['numSemaine'],$data['numJour'],$data['periodicite'],
-        $data['occurences'],$data['priorite']
+			$activites[] = new Activite($data['IDACTIVITE'],$data['IDAGENDA'],
+        $data['IDCATEGORIE'],$data['IDSIMILAIRE'],$data['TITRE'],
+        $data['DESCRIPTIF'],$data['POSGEOGRAPHIQUE'],$data['DATECREATION'],
+        $data['DATEUPDATE'], $data['DATEDEB'],$data['DATEFIN'],
+        $data['NUMSEMAINE'],$data['NUMJOUR'],$data['PERIODICITE'],
+        $data['OCCURENCES'],$data['PRIORITE']
       );
 		}
 		return $activites;
@@ -310,12 +310,12 @@ class Activite extends Model_Base
 		$s->execute();
     $activites = array();
 		while($data = $s->fetch(PDO::FETCH_ASSOC)) {
-			$activites[] = new Activite($data['idActivite'],$data['idAgenda'],
-        $data['idCategorie'],$data['idSimilaire'],$data['titre'],
-        $data['descriptif'],$data['posGeographique'],$data['dateCreation'],
-        $data['dateUpdate'], $data['dateDeb'],$data['dateFin'],
-        $data['numSemaine'],$data['numJour'],$data['periodicite'],
-        $data['occurences'],$data['priorite']
+			$activites[] = new Activite($data['IDACTIVITE'],$data['IDAGENDA'],
+        $data['IDCATEGORIE'],$data['IDSIMILAIRE'],$data['TITRE'],
+        $data['DESCRIPTIF'],$data['POSGEOGRAPHIQUE'],$data['DATECREATION'],
+        $data['DATEUPDATE'], $data['DATEDEB'],$data['DATEFIN'],
+        $data['NUMSEMAINE'],$data['NUMJOUR'],$data['PERIODICITE'],
+        $data['OCCURENCES'],$data['PRIORITE']
       );
 		}
 		return $activites;
@@ -329,12 +329,12 @@ class Activite extends Model_Base
 		$s->execute();
     $activites = array();
 		while($data = $s->fetch(PDO::FETCH_ASSOC)) {
-			$activites[] = new Activite($data['idActivite'],$data['idAgenda'],
-        $data['idCategorie'],$data['idSimilaire'],$data['titre'],
-        $data['descriptif'],$data['posGeographique'],$data['dateCreation'],
-        $data['dateUpdate'], $data['dateDeb'],$data['dateFin'],
-        $data['numSemaine'],$data['numJour'],$data['periodicite'],
-        $data['occurences'],$data['priorite']
+			$activites[] = new Activite($data['IDACTIVITE'],$data['IDAGENDA'],
+        $data['IDCATEGORIE'],$data['IDSIMILAIRE'],$data['TITRE'],
+        $data['DESCRIPTIF'],$data['POSGEOGRAPHIQUE'],$data['DATECREATION'],
+        $data['DATEUPDATE'], $data['DATEDEB'],$data['DATEFIN'],
+        $data['NUMSEMAINE'],$data['NUMJOUR'],$data['PERIODICITE'],
+        $data['OCCURENCES'],$data['PRIORITE']
       );
 		}
 		return $activites;

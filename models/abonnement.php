@@ -78,7 +78,7 @@ class Abonnement extends Model_Base
 		$s->execute();
 		$abonnements = array();
 		while ($data = $s->fetch(PDO::FETCH_ASSOC)) {
-			$abonnements[] = new Abonnement($data['idUtilisateur'], $data['idAgenda'], $data['priorite']);
+			$abonnements[] = new Abonnement($data['IDUTILISATEUR'], $data['IDAGENDA'], $data['PRIORITE']);
 		}
 		return $abonnements;
 	}

@@ -139,16 +139,12 @@ class Utilisateur extends Model_Base
 	}
 
 	public static function get_by_login($pseudo) {
-		$message="ok1";
-echo '<script type="text/javascript">window.alert("'.$message.'");</script>';
 		$s = self::$_db->prepare('SELECT * FROM UTILISATEUR where pseudo = :pseudo');
 		$s->bindValue(':pseudo', $pseudo, PDO::PARAM_STR);
 		$s->execute();
 		$data = $s->fetch(PDO::FETCH_ASSOC);
 		if ($data) {
-			$message=$data['MDP'];
-echo '<script type="text/javascript">window.alert("'.$message.'");</script>';
-			return new Utilisateur($data['idUtilisateur'], $data['nom'], $data['prenom'], $data['adresse'], $data['pseudo'], $data['MDP'], $data['email'], $data['dateInscription']);
+			return new Utilisateur($data['IDUTILISATEUR'], $data['NOM'], $data['PRENOM'], $data['ADRESSE'], $data['PSEUDO'], $data['MDP'], $data['EMAIL'], $data['DATEINSCRIPTION']);
 		} else {
 			return null;
 		}
@@ -160,7 +156,7 @@ echo '<script type="text/javascript">window.alert("'.$message.'");</script>';
 		$s->execute();
 		$data = $s->fetch(PDO::FETCH_ASSOC);
 		if ($data) {
-			return new Utilisateur($data['idUtilisateur'], $data['nom'], $data['prenom'], $data['adresse'], $data['pseudo'], $data['mdp'], $data['email'], $data['dateInscription']);
+			return new Utilisateur($data['IDUTILISATEUR'], $data['NOM'], $data['PRENOM'], $data['ADRESSE'], $data['PSEUDO'], $data['MDP'], $data['EMAIL'], $data['DATEINSCRIPTION']);
 		} else {
 			return null;
 		}
