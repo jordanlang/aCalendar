@@ -118,7 +118,7 @@ class Pause extends Model_Base
 		$s->execute();
 		$pauses = array();
 		while ($data = $s->fetch(PDO::FETCH_ASSOC)) {
-			$pauses[] = self::get_by_id($data['idPause']);
+			$pauses[] = new Pause($data['IDPAUSE'], $data['IDACTIVITE'], $data['DATEEVAL'], $data['DATEFIN'], $data['PERIODICITE'], $data['OCCURENCES']);
 		}
 		return $pauses;
 	}
@@ -129,7 +129,7 @@ class Pause extends Model_Base
 		$s->execute();
 		$data = $s->fetch(PDO::FETCH_ASSOC);
 		if ($data) {
-			return new Pause($data['idPause'], $data['idActivite'], $data['dateDeb'], $data['dateFin'], $data['periodicite'], $data['occurences']);
+			return new Pause($data['IDPAUSE'], $data['IDACTIVITE'], $data['DATEEVAL'], $data['DATEFIN'], $data['PERIODICITE'], $data['OCCURENCES']);
 		} else {
 			return null;
 		}
