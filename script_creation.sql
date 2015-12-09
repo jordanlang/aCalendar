@@ -18,15 +18,16 @@ create table AGENDA
 	description varchar2(300),
 	dateCreation date DEFAULT sysdate,
 	dateUpdate date DEFAULT sysdate,
-	intersection varchar2(1),
-	prive varchar2(1),
-	partage varchar2(1),
+	intersection number(1),
+	prive number(1),
+	partage number(1),
 	FOREIGN KEY (idUtilisateur) REFERENCES UTILISATEUR ON DELETE SET NULL
 );
 
 create table CATEGORIE
 (
 	idCategorie number(8) PRIMARY KEY,
+	nom varchar2(50),
 	descriptif varchar2(300)
 );
 
@@ -45,7 +46,7 @@ create table ACTIVITE
 	dateFin date,
 	numSemaine number(2),
 	numJour number(1),
-	periodicite varchar2(1),
+	periodicite number(1),
 	occurences number(8),
 	priorite number(8),
 	FOREIGN KEY (idAgenda) REFERENCES AGENDA ON DELETE CASCADE,
@@ -60,7 +61,7 @@ create table PAUSE
 	idActivite number(8) NOT NULL,
 	dateDeb date,
 	dateFin date,
-	periodicite varchar2(1),
+	periodicite number(1),
 	occurences number(8),
 	FOREIGN KEY (idActivite) REFERENCES ACTIVITE ON DELETE CASCADE,
 	CHECK (dateDeb < dateFin)
@@ -84,7 +85,7 @@ create table AIMECOMM
 	idUtilisateur number(8),
 	idComm number(8),
 	dateAime date DEFAULT sysdate,
-	aime varchar2(1) DEFAULT NULL,
+	aime number(1) DEFAULT NULL,
 	PRIMARY KEY (idUtilisateur, idComm),
 	FOREIGN KEY (idUtilisateur) REFERENCES UTILISATEUR ON DELETE CASCADE,
 	FOREIGN KEY (idComm) REFERENCES COMMENTAIRE ON DELETE CASCADE
@@ -127,9 +128,9 @@ create table A_AGENDA
 	idUtilisateur number(8),
 	nom varchar2(30),
 	description varchar2(300),
-	intersection varchar2(1),
-	prive varchar2(1),
-	partage varchar2(1)
+	intersection number(1),
+	prive number(1),
+	partage number(1)
 );
 
 create table A_ACTIVITE
@@ -147,7 +148,7 @@ create table A_ACTIVITE
 	dateFin date,
 	numSemaine number(2),
 	numJour number(1),
-	periodicite varchar2(1),
+	periodicite number(1),
 	occurences number(8),
 	priorite number(8)
 );

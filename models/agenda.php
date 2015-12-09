@@ -168,6 +168,17 @@ class Agenda extends Model_Base
 		return $agendas;
 	}
 
+	public static function get_by_user_name($idUtilisateur) {
+		$s = self::$_db->prepare('SELECT * FROM AGENDA where idUtilisateur = :id');
+		$s->bindValue(':id', $idUtilisateur, PDO::PARAM_INT);
+		$s->execute();
+		$agendas = array();
+		while ($data = $s->fetch(PDO::FETCH_ASSOC)) {
+			$agendas[] = $data['NOM'];
+		}
+		return $agendas;
+	}
+
 	public static function get_by_id($idAgenda) {
 		$s = self::$_db->prepare('SELECT * FROM AGENDA where idAgenda= :id');
 		$s->bindValue(':id', $idAgenda, PDO::PARAM_INT);

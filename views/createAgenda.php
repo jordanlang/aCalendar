@@ -9,11 +9,14 @@
 		<label for="content">Description</label>
 		<textarea type="text" id="content" name="content" rows="8"></textarea>
 	</div>
-	<div class="formline">
-		<input type="checkbox" name="intersection" value="Permettre les intersections d'activités">
-		<input type="checkbox" name="prive" value="Calendrier public">
-		<input type="checkbox" name="partage" value="Calendrier en partage">
-	</div>
+	<label><input type="checkbox" name="intersection" value="">
+	Permettre les intersections d'activités</label>
+	<br>
+	<input type="checkbox" name="prive" value="">
+	<label for="prive">Calendrier public</label>
+	<br>
+	<input type="checkbox" name="partage" value="">
+	<label for="partage">Calendrier en partage</label>
 	
 	<div class="formline">
 		<input type="submit" value="Create">
