@@ -78,11 +78,12 @@ main {
 }
 
 footer {
-	background-color: rgb(200,240,200);
-	padding: 20px;
-	font-size: 1.2rem;
+	background-color: #C8F0C8;
 	text-align: center;
-	border-top: 1px solid black;
+	border-top: 1px solid #000;
+	padding: 20px 34%;
+	position: absolute;
+	bottom: 0px;
 }
 
 footer p {
