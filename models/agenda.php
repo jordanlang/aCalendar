@@ -163,7 +163,7 @@ class Agenda extends Model_Base
 		$s->execute();
 		$agendas = array();
 		while ($data = $s->fetch(PDO::FETCH_ASSOC)) {
-			$agendas[] = new Agenda($data['IDAGENDA'], $data['IDUTILISATEUR'], $data['NOM'], $data['DESCRIPTION'], $data['DATECREATION'], $data['DATEUPDATE'], $data['INTERSECTION'], $data['PRIVE'], $data['PARTAGE']);
+			$agendas[] = new Agenda($data['idagenda'], $data['idutilisateur'], $data['nom'], $data['description'], $data['datecreation'], $data['dateupdate'], $data['intersection'], $data['prive'], $data['partage']);
 		}
 		return $agendas;
 	}
@@ -174,7 +174,7 @@ class Agenda extends Model_Base
 		$s->execute();
 		$agendas = array();
 		while ($data = $s->fetch(PDO::FETCH_ASSOC)) {
-			$agendas[] = $data['NOM'];
+			$agendas[] = new Agenda($data['idagenda'], $data['idutilisateur'], $data['nom'], $data['description'], $data['datecreation'], $data['dateupdate'], $data['intersection'], $data['prive'], $data['partage']);
 		}
 		return $agendas;
 	}
@@ -185,7 +185,7 @@ class Agenda extends Model_Base
 		$s->execute();
 		$data = $s->fetch(PDO::FETCH_ASSOC);
 		if ($data) {
-			return new Agenda($data['IDAGENDA'], $data['IDUTILISATEUR'], $data['NOM'], $data['DESCRIPTION'], $data['DATECREATION'], $data['DATEUPDATE'], $data['INTERSECTION'], $data['PRIVE'], $data['PARTAGE']);
+			return new Agenda($data['idagenda'], $data['idutilisateur'], $data['nom'], $data['description'], $data['datecreation'], $data['dateupdate'], $data['intersection'], $data['prive'], $data['partage']);
 		} else {
 			return null;
 		}

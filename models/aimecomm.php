@@ -79,7 +79,7 @@ class Aimecomm extends Model_Base
 		$s->execute();
 		$aimes = array();
 		while ($data = $s->fetch(PDO::FETCH_ASSOC)) {
-			$aimes[] = new Aimecomm($data['IDUTILISATEUR'], $data['IDCOMM'], $data['DATEAIME'], $data['AIME']);
+			$aimes[] = new Aimecomm($data['idutilisateur'], $data['idcomm'], $data['dateaime'], $data['aime']);
 		}
 		return $aimes;
 	}

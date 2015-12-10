@@ -164,7 +164,7 @@ class A_agenda extends Model_Base
 		$s->execute();
 		$agendas = array();
 		while ($data = $s->fetch(PDO::FETCH_ASSOC)) {
-			$agendas[] = self::get_by_id($data['IDAGENDA']);
+			$agendas[] = new Agenda($data['idagenda'], $data['idutilisateur'], $data['nom'], $data['description'], $data['datecreation'], $data['dateupdate'], $data['intersection'], $data['prive'], $data['partage']);
 		}
 		return $agendas;
 	}
@@ -175,7 +175,7 @@ class A_agenda extends Model_Base
 		$s->execute();
 		$data = $s->fetch(PDO::FETCH_ASSOC);
 		if ($data) {
-			return new Agenda($data['IDAGENDA'], $data['IDUTILISATEUR'], $data['NOM'], $data['DESCRIPTION'], $data['DATECREATION'], $data['DATEUPDATE'], $data['INTERSECTION'], $data['PRIVE'], $data['PARTAGE']);
+			return new Agenda($data['idagenda'], $data['idutilisateur'], $data['nom'], $data['description'], $data['datecreation'], $data['dateupdate'], $data['intersection'], $data['prive'], $data['partage']);
 		} else {
 			return null;
 		}
