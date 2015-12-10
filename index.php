@@ -53,6 +53,12 @@ if(isset($_SERVER['PATH_INFO'])) {
 	include 'views/home.php';
 }
 
+if(!isset($_SESSION['mois'])) {
+	$_SESSION['mois'] = date("n");
+	$_SESSION['jour'] = date("j");
+	$_SESSION['annee'] = date("y");
+}
+
 $content = ob_get_clean();
 
 ?>

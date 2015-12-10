@@ -16,15 +16,10 @@
 		</p>
 		<p>
 			<?php
-			$jour = date("w");
+			
 			//echo 'jour courant : '.$jour;
 			$heure = date("H");
 			$num=0;
-
-			$dateDebSemaineFr = date("d/m/Y", mktime(0,0,0,date("n"),date("d")-$jour+1,date("y")));
-			$dateFinSemaineFr = date("d/m/Y", mktime(0,0,0,date("n"),date("d")-$jour+7,date("y")));
-
-
 
 			$jourTexte = array('',1=>'lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.', 'dim.');
 			$plageH = array(1=>'00:00','01:00','02:00','03:00','04:00','05:00','06:00',
@@ -32,11 +27,11 @@
 				'16:00', '17:00', '18:00', '19:00', '20:00','21:00','22:00','23:00'
 		 	);
 
-			$nom_mois = date('F');
+			$nom_mois = date('F', mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee']));
 
 			switch($nom_mois)
 			{
-			    case 'Junuary' : $nom_mois = 'Janvier'; break;
+			    case 'January' : $nom_mois = 'Janvier'; break;
 			    case 'February' : $nom_mois = 'Février'; break;
 			    case 'March' : $nom_mois = 'Mars'; break;
 			    case 'April' : $nom_mois = 'Avril'; break;
@@ -45,25 +40,28 @@
 			    case 'July' : $nom_mois = 'Juillet'; break;
 			    case 'August' : $nom_mois = 'Août'; break;
 			    case 'September' : $nom_mois = 'Septembre'; break;
-			    case 'October' : $nom_mois = 'Otober'; break;
+			    case 'October' : $nom_mois = 'Octobre'; break;
 			    case 'November' : $nom_mois = 'Novembre'; break;
 			    case 'December' : $nom_mois = 'Décembre'; break;
 
 			}
 
+			
 			echo '<br/>
 			<div id="titreMois">
-			    <strong>'.$nom_mois.' '.date('Y').'</strong>
+			    <strong>'.$nom_mois.' '.date('Y', mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee'])).'</strong>
 					<br/>
 			</div>';
-			echo '<div class="text-right">
-			    <a href=""><<</a> <a href="">Aujourd\'hui</a> <a href="">>></a>
-			</div> ';
 
+			?>
+			<div class="text-right">
+			    <a href="<?=BASEURL?>/index.php/calendar/actualise_date_moins"><<</a> <a href="<?=BASEURL?>/index.php/calendar/actualise_date_maintenant">Aujourd'hui</a> <a href="<?=BASEURL?>/index.php/calendar/actualise_date_plus">>></a>
+			</div>
+			<?php
 
 
 			echo '<table border="1" class="cal">';
-
+			 
 			    // en tête de colonne
 			    echo '<tr>';
 			    for($k = 0; $k < 8; $k++)
@@ -71,13 +69,13 @@
 			        if($k==0)
 			            echo '<th>'.$jourTexte[$k].'</th>';
 			        else
-								if($k==$jour)
-			            echo '<th><div style="color: #C8F0C8;font-size: small;">'.$jourTexte[$k].' '.date("d", mktime(0,0,0,date("n"),date("d")-$jour+$k,date("y"))).'</div></th>';
+								if($k==$jour && date("U", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee'])) == date("U", mktime(0,0,0,date('n'),date('j'),date('y'))))
+			            echo '<th><div style="color: #C8F0C8;font-size: small;">'.$jourTexte[$k].' '.date("d", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+$k,$_SESSION['annee'])).'</div></th>';
 									else {
 										if($k==7 || $k==6)
-											echo '<th><div style="color: gray;font-size: small;">'.$jourTexte[$k].' '.date("d", mktime(0,0,0,date("n"),date("d")-$jour+$k,date("y"))).'</div></th>';
+											echo '<th><div style="color: gray;font-size: small;">'.$jourTexte[$k].' '.date("d", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+$k,$_SESSION['annee'])).'</div></th>';
 										else {
-											echo '<th><div style="font-size: small;">'.$jourTexte[$k].' '.date("d", mktime(0,0,0,date("n"),date("d")-$jour+$k,date("y"))).'</div></th>';
+											echo '<th><div style="font-size: small;">'.$jourTexte[$k].' '.date("d", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+$k,$_SESSION['annee'])).'</div></th>';
 										}
 									}
 
@@ -101,7 +99,7 @@
 			        // les infos pour chaque jour
             for ($j = 1; $j < 8; $j++)
             {
-							if($j==$jour && $h==$heure)
+							if($j==$jour && $h==$heure && date("U", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee'])) == date("U", mktime(0,0,0,date('n'),date('j'),date('y'))))
 								echo '<td style="background-color: #C8F0C8;">
 									</td>';
 							else {
