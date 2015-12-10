@@ -16,7 +16,7 @@
 		</p>
 		<p>
 			<?php
-			
+			$jour = date("w");
 			//echo 'jour courant : '.$jour;
 			$heure = date("H");
 			$num=0;
@@ -85,7 +85,7 @@
 			    // les 2 plages horaires : matin - midi
 			    for ($h = 1; $h <= 24; $h++)
 			    {
-						if($h==$heure)
+						if($h==$heure+1)
 							echo '<tr>
 							<th>
 									<div style="color: #C8F0C8;font-size: small;">'.$plageH[$h].'</div>
@@ -99,7 +99,7 @@
 			        // les infos pour chaque jour
             for ($j = 1; $j < 8; $j++)
             {
-							if($j==$jour && $h==$heure && date("U", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee'])) == date("U", mktime(0,0,0,date('n'),date('j'),date('y'))))
+							if($j==$jour && $h==$heure+1 && date("U", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee'])) == date("U", mktime(0,0,0,date('n'),date('j'),date('y'))))
 								echo '<td style="background-color: #C8F0C8;">
 									</td>';
 							else {
