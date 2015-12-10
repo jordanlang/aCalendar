@@ -23,7 +23,7 @@ class Controller_User
 				if (isset($_SESSION['user'])) {
 					$_SESSION['user'] = $u->pseudo();
 					show_message('message_success',"You're already connected as ".$_SESSION['user']);
-					include 'views/calendar.php';
+					include 'views/home.php';
 				}
 				else {
 					include 'views/connexion.php';
@@ -32,14 +32,14 @@ class Controller_User
 
 			case 'POST' :
 				if (isset($_POST['login']) && isset($_POST['pw'])) {
-					
+
 					$u = Utilisateur::get_by_login(htmlspecialchars($_POST['login']));
 					if (!is_null($u)) {
 						if ($u->mdp() == sha1($_POST['pw']))
 						{
 							$_SESSION['user'] = $u->pseudo();
 							show_message('message_success',"Vous êtes connecté");
-							include 'views/calendar.php';
+							include 'views/home.php';
 						}
 						else {
 							show_message('message_error',"Echec de connexion : login ou mot de passe incorrect");
@@ -174,7 +174,7 @@ class Controller_User
 					include 'views/connexion.php';
 				}
 				break;
-		}	
+		}
 	}
 
 	public function signup() {
