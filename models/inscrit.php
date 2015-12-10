@@ -66,7 +66,7 @@ class Inscrit extends Model_Base
 		$s->execute();
 		$inscriptions = array();
 		while ($data = $s->fetch(PDO::FETCH_ASSOC)) {
-			$inscriptions[] = new Inscrit($data['IDUTILISATEUR'], $data['IDACTIVITE']);
+			$inscriptions[] = new Inscrit($data['idUtilisateur'], $data['idActivite']);
 		}
 		return $inscriptions;
 	}
@@ -77,7 +77,7 @@ class Inscrit extends Model_Base
 		$s->execute();
 		$inscriptions = array();
 		while ($data = $s->fetch(PDO::FETCH_ASSOC)) {
-			$inscriptions[] = new Inscrit($data['IDUTILISATEUR'], $data['IDACTIVITE']);
+			$inscriptions[] = new Inscrit($data['idUtilisateur'], $data['idActivite']);
 		}
 		return $inscriptions;
 	}

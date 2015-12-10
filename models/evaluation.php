@@ -87,8 +87,8 @@ class Evaluation extends Model_Base
     $evaluations = array();
 		while($data = $s->fetch(PDO::FETCH_ASSOC)) {
 			$evaluations[] = new Evaluation(
-        $data['IDUTILISATEUR'], $data['IDACTIVITE'],
-        $data['NOTE'], $data['DATEEVAL']
+        $data['idUtilisateur'], $data['idActivite'],
+        $data['note'], $data['dateEval']
       );
 		}
 		return $evaluations;
@@ -102,8 +102,8 @@ class Evaluation extends Model_Base
     $evaluations = array();
 		while($data = $s->fetch(PDO::FETCH_ASSOC)) {
 			$evaluations[] = new Evaluation(
-        $data['IDUTILISATEUR'], $data['IDACTIVITE'],
-        $data['NOTE'], $data['DATEEVAL']
+        $data['idUtilisateur'], $data['idActivite'],
+        $data['note'], $data['dateEval']
       );
 		}
 		return $evaluations;
@@ -119,8 +119,8 @@ class Evaluation extends Model_Base
 		$data = $s->fetch(PDO::FETCH_ASSOC);
     if($data) {
       return new Evaluation(
-        $data['IDUTILISATEUR'], $data['IDACTIVITE'],
-        $data['NOTE'], $data['DATEEVAL']
+        $data['idUtilisateur'], $data['idActivite'],
+        $data['note'], $data['dateEval']
       );
     }
 		return null;

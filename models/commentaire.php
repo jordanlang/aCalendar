@@ -114,7 +114,7 @@ class Commentaire extends Model_Base
 		$s->execute();
 		$activites = array();
 		while ($data = $s->fetch(PDO::FETCH_ASSOC)) {
-			$activites[] = new Commentaire($data['IDCOMM'], $data['IDPARENT'], $data['IDUTILISATEUR'], $data['IDACTIVITE'], $data['DATECOMM'], $data['COMMENTAIRE']);
+			$activites[] = new Commentaire($data['idComm'], $data['idParent'], $data['idUtilisateur'], $data['idActivite'], $data['dateComm'], $data['commentaire']);
 		}
 		return $activites;
 	}
@@ -125,7 +125,7 @@ class Commentaire extends Model_Base
 		$s->execute();
 		$data = $s->fetch(PDO::FETCH_ASSOC);
 		if ($data) {
-			return new Commentaire($data['IDCOMM'], $data['IDPARENT'], $data['IDUTILISATEUR'], $data['IDACTIVITE'], $data['DATECOMM'], $data['COMMENTAIRE']);
+			return new Commentaire($data['idComm'], $data['idParent'], $data['idUtilisateur'], $data['idActivite'], $data['dateComm'], $data['commentaire']);
 		} else {
 			return null;
 		}

@@ -144,7 +144,7 @@ class Utilisateur extends Model_Base
 		$s->execute();
 		$data = $s->fetch(PDO::FETCH_ASSOC);
 		if ($data) {
-			return new Utilisateur($data['IDUTILISATEUR'], $data['NOM'], $data['PRENOM'], $data['ADRESSE'], $data['PSEUDO'], $data['MDP'], $data['EMAIL'], $data['DATEINSCRIPTION']);
+			return new Utilisateur($data['idUtilisateur'], $data['nom'], $data['prenom'], $data['adresse'], $data['pseudo'], $data['mdp'], $data['email'], $data['dateInscription']);
 		} else {
 			return null;
 		}
@@ -156,7 +156,7 @@ class Utilisateur extends Model_Base
 		$s->execute();
 		$data = $s->fetch(PDO::FETCH_ASSOC);
 		if ($data) {
-			return new Utilisateur($data['IDUTILISATEUR'], $data['NOM'], $data['PRENOM'], $data['ADRESSE'], $data['PSEUDO'], $data['MDP'], $data['EMAIL'], $data['DATEINSCRIPTION']);
+			return new Utilisateur($data['idUtilisateur'], $data['nom'], $data['prenom'], $data['adresse'], $data['pseudo'], $data['mdp'], $data['email'], $data['dateInscription']);
 		} else {
 			return null;
 		}

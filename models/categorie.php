@@ -79,7 +79,7 @@ class Categorie extends Model_Base
 		$s->execute();
 		$data = $s->fetch(PDO::FETCH_ASSOC);
 		if ($data) {
-			return new Categorie($data['IDCATEGORIE'], $data['NOM'], $data['DESCRIPTIF']);
+			return new Categorie($data['idCategorie'], $data['nom'], $data['descriptif']);
 		} else {
 			return null;
 		}
@@ -91,7 +91,7 @@ class Categorie extends Model_Base
 		$data = $s->fetch(PDO::FETCH_ASSOC);
 		$categories = array();
 		while ($data = $s->fetch(PDO::FETCH_ASSOC)) {
-			$categories[] = $data['NOM'];
+			$categories[] = $data['nom'];
 		}
 		return $categories;
 	}
