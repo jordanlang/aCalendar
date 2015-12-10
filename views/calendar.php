@@ -1,6 +1,9 @@
 <li>
 	<div class="myCal">
-		<a href="<?=BASEURL?>/index.php/calendar/add_calendar/<?php echo $id; ?>">+</a>
+		<a href="<?=BASEURL?>/index.php/calendar/add_calendar/">+</a>
+		<?php for($j=0; $j<count($calendar); $j++) { ?>
+			<a href="<?=BASEURL?>/index.php/calendar/show_other_calendar/<?php echo $calendar['idAgenda']?>"><?php echo $calendar['nom']?></a>
+		<?php } ?>
 	</div>
 	<div class="actualCal">
 		<h2>
@@ -46,7 +49,7 @@
 
 			}
 
-			
+
 			echo '<br/>
 			<div id="titreMois">
 			    <strong>'.$nom_mois.' '.date('Y', mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee'])).'</strong>
@@ -61,7 +64,7 @@
 
 
 			echo '<table border="1" class="cal">';
-			 
+
 			    // en tête de colonne
 			    echo '<tr>';
 			    for($k = 0; $k < 8; $k++)
