@@ -2,7 +2,7 @@
 
 require_once 'base.php';
 
-class Activite extends Model_Base
+class A_activite extends Model_Base
 {
 	private $_idActivite;
 
@@ -195,7 +195,8 @@ class Activite extends Model_Base
 
 	public function add() {
 		if(!is_null($this->_id)) {
-			$q = self::$_db->prepare('INSERT INTO ACTIVITE (idAgenda, idCategorie, idSimilaire, titre, descriptif, posGeographique,
+			$q = self::$_db->prepare('INSERT INTO A_ACTIVITE (seq_activite.nextval,
+        idAgenda, idCategorie, idSimilaire, titre, descriptif, posGeographique,
         dateCreation, dateUpdate, dateDeb, dateFin, numSemaine, numJour,
         periodicite, occurences, priorite) VALUES (:idAgenda,:idCategorie,
         :idSimilaire,
@@ -224,7 +225,7 @@ class Activite extends Model_Base
 	public function save()
 	{
 		if(!is_null($this->_id)) {
-			$q = self::$_db->prepare('UPDATE ACTIVITE SET descriptif=:descriptif,
+			$q = self::$_db->prepare('UPDATE A_ACTIVITE SET descriptif=:descriptif,
         posGeographique=:posGeographique, dateUpdate=sysdate, dateDeb=:dateDeb,
         dateFin=:dateFin, numSemaine=:numSemaine, numJour=:numJour,
         periodicite=:periodicite, occurences=:occurences, priorite=:priorite
@@ -247,7 +248,7 @@ class Activite extends Model_Base
 	public function delete()
 	{
 		if(!is_null($this->_id)) {
-			$q = self::$_db->prepare('DELETE FROM ACTIVITE WHERE idAgenda = :id');
+			$q = self::$_db->prepare('DELETE FROM A_ACTIVITE WHERE idAgenda = :id');
 			$q->bindValue(':id', $this->_idAgenda);
 			$q->execute();
 			$this->_id = null;
@@ -255,7 +256,7 @@ class Activite extends Model_Base
 	}
 
 	public static function get_by_descriptif($descriptif) {
-		$s = self::$_db->prepare('SELECT * FROM ACTIVITE where descriptif LIKE
+		$s = self::$_db->prepare('SELECT * FROM A_ACTIVITE where descriptif LIKE
       "%:descr%"');
 		$s->bindValue(':descr', $descriptif, PDO::PARAM_STR);
 		$s->execute();
@@ -269,7 +270,7 @@ class Activite extends Model_Base
 	}
 
 	public static function get_by_id($id) {
-		$s = self::$_db->prepare('SELECT * FROM ACTIVITE where idActivite = :id');
+		$s = self::$_db->prepare('SELECT * FROM A_ACTIVITE where idActivite = :id');
 		$s->bindValue(':id', $id, PDO::PARAM_INT);
 		$s->execute();
 		$data = $s->fetch(PDO::FETCH_ASSOC);
@@ -287,7 +288,7 @@ class Activite extends Model_Base
 	}
 
   public static function get_by_idAgenda($id) {
-		$s = self::$_db->prepare('SELECT * FROM ACTIVITE where idAgenda = :id');
+		$s = self::$_db->prepare('SELECT * FROM A_ACTIVITE where idAgenda = :id');
 		$s->bindValue(':id', $id, PDO::PARAM_INT);
 		$s->execute();
     $activites = array();
@@ -304,7 +305,7 @@ class Activite extends Model_Base
 	}
 
   public static function get_by_idUtilisateur($id) {
-    $s = self::$_db->prepare('SELECT * FROM ACTIVITE where idUtilisateur =:id');
+    $s = self::$_db->prepare('SELECT * FROM A_ACTIVITE where idUtilisateur =:id');
 		$s->bindValue(':id', $id, PDO::PARAM_INT);
 		$s->execute();
     $activites = array();
@@ -321,7 +322,7 @@ class Activite extends Model_Base
 	}
 
   public static function get_by_idUtilisateurAgenda($idUtilisateur,$idActivite){
-    $s = self::$_db->prepare('SELECT * FROM ACTIVITE
+    $s = self::$_db->prepare('SELECT * FROM A_ACTIVITE
       where idUtilisateur =:idUtil AND idAgenda=:idAgenda');
 		$s->bindValue(':idUtil', $idUtilisateur, PDO::PARAM_INT);
     $s->bindValue(':idAgenda', $idAgenda, PDO::PARAM_INT);

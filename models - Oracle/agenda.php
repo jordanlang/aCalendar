@@ -112,7 +112,7 @@ class Agenda extends Model_Base
 
 	public function add() {
 		if(!is_null($this->_idAgenda)) {
-			$q = self::$_db->prepare('INSERT INTO AGENDA (idUtilisateur, nom, description, intersection, prive, partage) VALUES (:id, :nom, :description, :intersection, :prive, :partage)');
+			$q = self::$_db->prepare('INSERT INTO AGENDA (idAgenda, idUtilisateur, nom, description, intersection, prive, partage) VALUES (seq_agenda.nextval, :id, :nom, :description, :intersection, :prive, :partage)');
 			$q->bindValue(':id', $this->_idUtilisateur, PDO::PARAM_INT);
 			$q->bindValue(':nom', $this->_nom, PDO::PARAM_STR);
 			$q->bindValue(':description', $this->_description, PDO::PARAM_STR);

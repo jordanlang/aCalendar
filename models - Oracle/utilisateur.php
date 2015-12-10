@@ -101,7 +101,7 @@ class Utilisateur extends Model_Base
 
 	public function add() {
 		if(!is_null($this->_idUtilisateur)) {
-			$q = self::$_db->prepare('INSERT INTO UTILISATEUR (nom, prenom, adresse, pseudo, mdp, email) VALUES (:nom, :prenom, :adresse, :pseudo, :mdp, :email)');
+			$q = self::$_db->prepare('INSERT INTO UTILISATEUR (idUtilisateur, nom, prenom, adresse, pseudo, mdp, email) VALUES (seq_utilisateur.nextval, :nom, :prenom, :adresse, :pseudo, :mdp, :email)');
 			$q->bindValue(':nom', $this->_nom, PDO::PARAM_STR);
 			$q->bindValue(':prenom', $this->_prenom, PDO::PARAM_STR);
 			$q->bindValue(':adresse', $this->_adresse, PDO::PARAM_STR);

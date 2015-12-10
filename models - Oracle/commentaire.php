@@ -79,7 +79,7 @@ class Commentaire extends Model_Base
 
 	public function add() {
 		if(!is_null($this->_idComm)) {
-			$q = self::$_db->prepare('INSERT INTO COMMENTAIRE (idParent, idUtilisateur, idActivite, commentaire) VALUES (:idParent, :idUtilisateur, :idActivite, :commentaire)');
+			$q = self::$_db->prepare('INSERT INTO COMMENTAIRE (idComm, idParent, idUtilisateur, idActivite, commentaire) VALUES (seq_commentaire.nextval, :idParent, :idUtilisateur, :idActivite, :commentaire)');
 			$q->bindValue(':idParent', $this->_idParent, PDO::PARAM_INT);
 			$q->bindValue(':idUtilisateur', $this->_idUtilisateur, PDO::PARAM_INT);
 			$q->bindValue(':idActivite', $this->_idActivite, PDO::PARAM_INT);

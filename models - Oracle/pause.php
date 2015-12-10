@@ -79,7 +79,7 @@ class Pause extends Model_Base
 
 	public function add() {
 		if(!is_null($this->_idPause)) {
-			$q = self::$_db->prepare('INSERT INTO PAUSE (idActivite, dateDeb, dateFin, periodicite, occurences) VALUES (:id, :dateDeb, :dateFin, :periodicite, :occurences)');
+			$q = self::$_db->prepare('INSERT INTO PAUSE (idPause, idActivite, dateDeb, dateFin, periodicite, occurences) VALUES (seq_pause.nextval, :id, :dateDeb, :dateFin, :periodicite, :occurences)');
 			$q->bindValue(':id', $this->_idActivite, PDO::PARAM_INT);
 			$q->bindValue(':dateDeb', $this->_dateDeb, PDO::PARAM_STR);
 			$q->bindValue(':dateFin', $this->_dateFin, PDO::PARAM_STR);

@@ -195,7 +195,8 @@ class Activite extends Model_Base
 
 	public function add() {
 		if(!is_null($this->_id)) {
-			$q = self::$_db->prepare('INSERT INTO ACTIVITE (idAgenda, idCategorie, idSimilaire, titre, descriptif, posGeographique,
+			$q = self::$_db->prepare('INSERT INTO ACTIVITE (seq_activite.nextval,
+        idAgenda, idCategorie, idSimilaire, titre, descriptif, posGeographique,
         dateCreation, dateUpdate, dateDeb, dateFin, numSemaine, numJour,
         periodicite, occurences, priorite) VALUES (:idAgenda,:idCategorie,
         :idSimilaire,

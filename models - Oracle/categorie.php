@@ -46,7 +46,7 @@ class Categorie extends Model_Base
 
 	public function add() {
 		if(!is_null($this->_idCategorie)) {
-			$q = self::$_db->prepare('INSERT INTO CATEGORIE (nom, descriptif) VALUES (:nom, :descriptif)');
+			$q = self::$_db->prepare('INSERT INTO CATEGORIE (idCategorie, nom, descriptif) VALUES (seq_categorie.nextval, :nom, :descriptif)');
 			$q->bindValue(':nom', $this->_nom, PDO::PARAM_STR);
 			$q->bindValue(':descriptif', $this->_descriptif, PDO::PARAM_STR);
 			$q->execute();

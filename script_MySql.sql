@@ -1,18 +1,19 @@
 create table UTILISATEUR
 (
-	idUtilisateur INT(8) PRIMARY KEY,
+	idUtilisateur INT(8) AUTO_INCREMENT,
 	nom varchar(30),
 	prenom varchar(30),
 	adresse varchar(50),
 	pseudo varchar(30) UNIQUE,
 	mdp varchar(50),
 	email varchar(40) UNIQUE,
+	PRIMARY KEY (idUtilisateur),
 	dateInscription TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 create table AGENDA
 (
-	idAgenda INT(8) PRIMARY KEY,
+	idAgenda INT(8) PRIMARY KEY AUTO_INCREMENT,
 	idUtilisateur INT(8),
 	nom varchar(30),
 	description varchar(300),
@@ -26,7 +27,7 @@ create table AGENDA
 
 create table CATEGORIE
 (
-	idCategorie INT(8) PRIMARY KEY,
+	idCategorie INT(8) PRIMARY KEY AUTO_INCREMENT,
 	nom varchar(50),
 	descriptif varchar(300)
 );
@@ -34,7 +35,7 @@ create table CATEGORIE
 
 create table ACTIVITE
 (
-	idActivite INT(8) PRIMARY KEY,
+	idActivite INT(8) PRIMARY KEY AUTO_INCREMENT,
 	idAgenda INT(8) NOT NULL,
 	idCategorie INT(8),
 	idSimilaire INT(8),
@@ -56,7 +57,7 @@ create table ACTIVITE
 
 create table PAUSE
 (
-	idPause INT(8) PRIMARY KEY,
+	idPause INT(8) PRIMARY KEY AUTO_INCREMENT,
 	idActivite INT(8) NOT NULL,
 	dateDeb date,
 	dateFin date,
@@ -67,7 +68,7 @@ create table PAUSE
 
 create table COMMENTAIRE
 (
-	idComm INT(8) PRIMARY KEY,
+	idComm INT(8) PRIMARY KEY AUTO_INCREMENT,
 	idParent INT(8),
 	idUtilisateur INT(8) NOT NULL,
 	idActivite INT(8) NOT NULL,
@@ -79,7 +80,7 @@ create table COMMENTAIRE
 
 create table AIMECOMM
 (
-	idUtilisateur INT(8),
+	idUtilisateur INT(8) AUTO_INCREMENT,
 	idComm INT(8),
 	dateAime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	aime INT(1) DEFAULT NULL,
@@ -112,7 +113,7 @@ create table EVALUATION
 	idUtilisateur INT(8),
 	idActivite INT(8),
 	note INT(1),
-	dateEval date DEFAULT sysdate,
+	dateEval TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (idUtilisateur, idActivite),
 	FOREIGN KEY (idUtilisateur) REFERENCES UTILISATEUR(idUtilisateur) ON DELETE CASCADE,
 	FOREIGN KEY (idActivite) REFERENCES ACTIVITE(idActivite) ON DELETE CASCADE
