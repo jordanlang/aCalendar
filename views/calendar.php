@@ -1,8 +1,9 @@
 <li>
 	<div class="myCal">
 		<a href="<?=BASEURL?>/index.php/calendar/add_calendar/">+</a>
-		<?php for($j=0; $j<count($calendar); $j++) { ?>
-			<a href="<?=BASEURL?>/index.php/calendar/show_other_calendar/<?php echo $calendar['idAgenda']?>"><?php echo $calendar['nom']?></a>
+		<?php for($j=0; $j<count($calendars); $j++) { ?>
+
+			<a href="<?=BASEURL?>/index.php/calendar/show_other_calendar/<?php echo $calendars[$j]->idAgenda();?>"><?php echo $calendars[$j]->nom();?></a>
 		<?php } ?>
 	</div>
 	<div class="actualCal">
@@ -11,11 +12,6 @@
 		</h2>
 		<p>
 			<?php echo $content; ?>
-		</p>
-		<p class="text-right">
-			<a href="<?=BASEURL?>/index.php/note/update_note/<?php echo $id; ?>"> Edit </a>
-			<br>
-			<a href="<?=BASEURL?>/index.php/note/delete_note/<?php echo $id; ?>"> Delete </a>
 		</p>
 		<p>
 			<?php

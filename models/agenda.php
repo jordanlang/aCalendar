@@ -157,9 +157,9 @@ class Agenda extends Model_Base
 		}
 	}
 
-	public static function get_by_user($idUtilisateur) {
-		$s = self::$_db->prepare('SELECT * FROM AGENDA where idUtilisateur = :id');
-		$s->bindValue(':id', $idUtilisateur, PDO::PARAM_INT);
+	public static function get_by_user_login($utilisateur) {
+		$s = self::$_db->prepare('SELECT a.idAgenda, a.idUtilisateur, a.nom, a.description, a.dateCreation, a.dateUpdate, a.intersection, a.prive, a.partage FROM AGENDA a, UTILISATEUR u where u.idUtilisateur = a.idUtilisateur AND u.pseudo = :utilisateur');
+		$s->bindValue(':utilisateur', $utilisateur, PDO::PARAM_STR);
 		$s->execute();
 		$agendas = array();
 		while ($data = $s->fetch(PDO::FETCH_ASSOC)) {
