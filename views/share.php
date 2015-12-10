@@ -5,3 +5,12 @@
 	<input type="text" id="recherche" name="recherche">
 	<input type="submit" value="Rechercher">
 </form>
+
+
+<ul>
+<?php for($i=1; $i<count($agendas); $i++) { ?>
+	<li>
+		<h3><?=$?></h3>
+	</li>
+<?php } ?>
+</ul>

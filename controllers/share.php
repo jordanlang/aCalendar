@@ -51,7 +51,7 @@ class Controller_Share
 			case 'POST' :
 				if(isset($_SESSION['user'])) {
 					if(Utilisateur::exist($_POST['recherche'])) {
-						$user = ;
+						$agendas = Agenda::get_by_user_public('$_POST['recherche']');
 					}
 					include 'views/share.php';
 				}
