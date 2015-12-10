@@ -23,7 +23,7 @@ class Controller_User
 				if (isset($_SESSION['user'])) {
 					$_SESSION['user'] = $u->pseudo();
 					show_message('message_success',"You're already connected as ".$_SESSION['user']);
-					include 'views/connexion.php';
+					include 'views/calendar.php';
 				}
 				else {
 					include 'views/connexion.php';
@@ -35,15 +35,11 @@ class Controller_User
 					
 					$u = Utilisateur::get_by_login(htmlspecialchars($_POST['login']));
 					if (!is_null($u)) {
-						$message=$_POST['pw'];
-echo '<script type="text/javascript">window.alert("'.$message.'");</script>';
-						$message=$u->pseudo();
-echo '<script type="text/javascript">window.alert("'.$message.'");</script>';
 						if ($u->mdp() == sha1($_POST['pw']))
 						{
 							$_SESSION['user'] = $u->pseudo();
 							show_message('message_success',"Vous êtes connecté");
-							include 'views/correction_newcorrection.php';
+							include 'views/calendar.php';
 						}
 						else {
 							show_message('message_error',"Echec de connexion : login ou mot de passe incorrect");
@@ -84,8 +80,6 @@ echo '<script type="text/javascript">window.alert("'.$message.'");</script>';
 					if (!$exist) {
 						if($_POST['pw'] == $_POST['pwConfirm']) {
 							//Fonction sha1 permet crypté le mot de passe
-							/*$message='Voici un message en javascript écrit par php'; 
-echo '<script type="text/javascript">window.alert("'.$message.'");</script>'; */
 							$u = new Utilisateur(1, NULL, NULL, NULL, htmlspecialchars($_POST['login']), sha1($_POST['pw']), NULL, NULL);
 							/*$_POST['nom'] = "Jordan";
 							$_POST['prenom'] = "Coucou";
