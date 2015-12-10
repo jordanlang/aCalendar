@@ -112,7 +112,7 @@ create table EVALUATION
 	idUtilisateur INT(8),
 	idActivite INT(8),
 	note INT(1),
-	dateEval date DEFAULT sysdate,
+	dateEval TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (idUtilisateur, idActivite),
 	FOREIGN KEY (idUtilisateur) REFERENCES UTILISATEUR(idUtilisateur) ON DELETE CASCADE,
 	FOREIGN KEY (idActivite) REFERENCES ACTIVITE(idActivite) ON DELETE CASCADE
