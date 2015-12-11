@@ -10,7 +10,7 @@ require_once 'models/aimecomm.php';
 class Controller_Activite
 {
 
-  public static function doTree($comm,$niveau)
+  public static function doTree($comm,$niveau,$activite)
   {
     $aime=Aimecomm::get_by_comm($comm->idComm());
     for($i=0;$i<count($aime);$i++)
@@ -24,20 +24,18 @@ class Controller_Activite
     $niveau ++;
     for($i=0;$i<count($childs);$i++)
     {
-      self::doTree($childs[$i],$niveau);
+      self::doTree($childs[$i],$niveau,$activite);
     }
 
   }
 
-	public function show($id) {
-		switch ($_SERVER['REQUEST_METHOD']) {
-			case 'GET' :
+	public static function show($id) {
         if(isset($_SESSION['user'])) {
           $activite=Activite::get_by_id($id);
 					include 'views/activite.php';
           $commentaires=Commentaire::get_by_activite($id);
           for($j=0;$j<count($commentaires);$j++){
-            self::doTree($commentaires[$j],0);
+            self::doTree($commentaires[$j],0,$activite);
           }
           include 'views/endActivite.php';
   			}
@@ -46,11 +44,20 @@ class Controller_Activite
 					$_SESSION['message']['text'] = "You aren't connected";
 					include 'views/connexion.php';
 				}
+
+  }
+
+  public static function doCommentaire($idActivite,$idParent)
+  {
+		switch ($_SERVER['REQUEST_METHOD']) {
+			case 'GET' :
 				break;
 
 			case 'POST' :
 				if(isset($_SESSION['user'])) {
-					include 'views/calendar.php';
+          $c= new Commentaire(1,$idParent,$_SESSION['idUser'],$idActivite,'',$_POST['contenu']);
+          $c->add();
+					self::show($idActivite);
 				}
 				else {
 					$_SESSION['message']['type'] = 'error';
@@ -59,25 +66,6 @@ class Controller_Activite
 				}
 				break;
 		}
+  }
 
-    public static function doCommentaire($idActivite,$idParent,$descriptif)
-    {
-  		switch ($_SERVER['REQUEST_METHOD']) {
-  			case 'GET' :
-  				break;
-
-  			case 'POST' :
-  				if(isset($_SESSION['user'])) {
-            $c= new Commentaire(1,$idActivite,$idParent,$_SESSION['idUser'],'',$descriptif);
-            $c->add();
-  					self::show($idActivite);
-  				}
-  				else {
-  					$_SESSION['message']['type'] = 'error';
-  					$_SESSION['message']['text'] = "You aren't connected";
-  					include 'views/connexion.php';
-  				}
-  				break;
-  		}
-	}
 }

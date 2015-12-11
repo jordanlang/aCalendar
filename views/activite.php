@@ -47,7 +47,7 @@
   </div>
   <div class="commentaires" style="width: 50%;">
     <h2 style="text-align: center;"> Les commentaires</h2>
-    <form method="post" action="<?=BASEURL?>/index.php/commentaire/add">
+    <form method="post" action="<?=BASEURL?>/index.php/activite/doCommentaire/<? echo $activite->idActivite();?>/NULL">
 					<textarea name="contenu" style="width: 100%" id="contenu" class="question" rows = "2" cols = "20" placeholder = "Commentez moi" ></textarea>
         <div class="formline">
     			<input type="submit" value="Validate">
