@@ -163,6 +163,7 @@ class Agenda extends Model_Base
 		$s->execute();
 		$agendas = array();
 		while ($data = $s->fetch(PDO::FETCH_ASSOC)) {
+
 			$agendas[] = new Agenda($data['idAgenda'], $data['idUtilisateur'], $data['nom'], $data['description'], $data['dateCreation'], $data['dateUpdate'], $data['intersection'], $data['prive'], $data['partage']);
 		}
 		return $agendas;

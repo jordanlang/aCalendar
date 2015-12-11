@@ -10,28 +10,45 @@ class Controller_Calendar
 	public function show_calendar() {
 		switch ($_SERVER['REQUEST_METHOD']) {
 			case 'GET' :
-				self::actualise_date_maintenant();
+
+				$jour = date("w");
+
+				$_SESSION['mois'] = date("n");
+				$_SESSION['jour'] = date("j");
+				$_SESSION['annee'] = date("y");
+
+				$_SESSION['dateDebSemaineFr'] = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+1,$_SESSION['annee']));
+				$datePrecise = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee']));
+				$_SESSION['$dateFinSemaineFr'] = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+7,$_SESSION['annee']));
+				//self::actualise_date_maintenant();
 				//si l'utilisateur est connecté on affiche la page de création d'une note
 				if(isset($_SESSION['user'])) {
 					$num=1;
 					$calendars = array();
 					$calendars=Agenda::get_by_user_login($_SESSION['user']);
-					$semaine = array();
+					$heures = array();
 					$jourSemaine = array();
 					$activites = array();
-					//$activites =Activite::get_by_idUtilisateurAgendaDate($_SESSION['idUser'],$calendars[$num]->idAgenda(),$_SESSION['dateDebSemaineFr'],$_SESSION['dateFinSemaineFr']);
-					for($k=0;$k<7;$k++)
+					$activites = Activite::get_by_idUtilisateurAgendaDate($_SESSION['idUser'],$calendars[$num-1]->idAgenda(),$_SESSION['dateDebSemaineFr'],$_SESSION['$dateFinSemaineFr']);
+					for($m=0;$m<count($activites);$m++)
 					{
 						for($l=0;$l<24;$l++)
 						{
+							for($k=0;$k<7;$k++)
+							{
 
+								if(date("H",$activites->dateDeb())== $l && date("d",$activites->dateDeb())==date("d",$_SESSION['dateDebSemaineFr'])+$k)
+									$jourSemaine[$k]=$activites[$m];
+								else {
+									$jourSemaine[$k]=NULL;
+								}
+							}
+							$heures[$l]=$jourSemaine;
 						}
-						$semaine[$k]=$jourSemaine;
-
 					}
 
 
-
+					echo count($calendars);
 					include 'views/calendar.php';
 				}
 				else {

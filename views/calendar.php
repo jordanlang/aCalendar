@@ -116,15 +116,25 @@
             for ($j = 1; $j < 8; $j++)
             {
 							if($j==$jour && $h==$heure+1 && date("U", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee'])) == date("U", mktime(0,0,0,date('n'),date('j'),date('y'))))
-								echo '<td style="background-color: #C8F0C8;">
-									</td>';
+							{
+								echo '<td style="background-color: #C8F0C8;">';
+								if($heures[$h][$j]!=NULL)
+									echo '<a href="<?=BASEURL?>/index.php/activite/show/'.$heures[$h][$j]->idActivite().'">'.$heures[$h][$j]->titre().'</a>';
+								echo '</td>';
+							}
 							else {
-								if($j==6 || $j==7)
-	                echo '<td style="background-color: rgb(228, 228, 228);">
-	                </td>';
-								else
-										echo '<td>
-		                </td>';
+								if($j==6 || $j==7){
+	                echo '<td style="background-color: rgb(228, 228, 228);">';
+									if($heures[$h][$j]!=NULL)
+										echo '<a href="<?=BASEURL?>/index.php/activite/show/'.$heures[$h][$j]->idActivite().'">'.$heures[$h][$j]->titre().'</a>';
+									echo '</td>';
+								}
+								else{
+									echo '<td>';
+									if($heures[$h][$j]!=NULL)
+										echo '<a href="<?=BASEURL?>/index.php/activite/show/'.$heures[$h][$j]->idActivite().'">'.$heures[$h][$j]->titre().'</a>';
+									echo '</td>';
+								}
           		}
 						}
 						echo '</td>

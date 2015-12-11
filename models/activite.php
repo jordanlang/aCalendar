@@ -326,6 +326,28 @@ class Activite extends Model_Base
 		return $activites;
 	}
 
+	public static function get_by_idUtilisateurAgendaDate($idUtilisateur,$idAgenda,$date, $dateFin) {
+    $s = self::$_db->prepare('SELECT * FROM ACTIVITE where idUtilisateur =:id
+			AND idAgenda = :idAgenda AND dateDeb>=:dateDeb AND dateFin<:dateFin' );
+		$s->bindValue(':id', $idUtilisateur, PDO::PARAM_INT);
+		$s->bindValue(':idAgenda', $idAgenda, PDO::PARAM_INT);
+		$s->bindValue(':dateDeb', $date, PDO::PARAM_STR);
+		$s->bindValue(':dateFin', $dateFin, PDO::PARAM_STR);
+		$s->execute();
+    $activites = array();
+		while($data = $s->fetch(PDO::FETCH_ASSOC)) {
+			$activites[] = new Activite($data['idActivite'],$data['idAgenda'],
+        $data['idCategorie'],$data['idSimilaire'],$data['titre'],
+        $data['descriptif'],$data['posGeographique'],$data['dateCreation'],
+        $data['dateUpdate'], $data['dateDeb'],$data['dateFin'],
+        $data['numSemaine'],$data['numJour'],$data['periodicite'],
+        $data['occurences'],$data['priorite']
+
+      );
+		}
+		return $activites;
+	}
+
   public static function get_by_idUtilisateurAgenda($idUtilisateur,$idActivite){
     $s = self::$_db->prepare('SELECT * FROM ACTIVITE
       where idUtilisateur =:idUtil AND idAgenda=:idAgenda');
