@@ -198,6 +198,7 @@ ul.squarelist li {
 main li{
 	display: inline-flex;
 	width: 100%;
+	margin-bottom: 8rem;
 }
 
 .myCal {

@@ -38,6 +38,7 @@ class Controller_User
 						if ($u->mdp() == sha1($_POST['pw']))
 						{
 							$_SESSION['user'] = $u->pseudo();
+							$_SESSION['idUser'] = $u->idUtilisateur();
 							show_message('message_success',"Vous êtes connecté");
 							include 'views/home.php';
 						}

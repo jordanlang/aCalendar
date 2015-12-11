@@ -70,7 +70,9 @@ $content = ob_get_clean();
 	<link rel="stylesheet" href="<?=BASEURL?>/css/normalize.css" type="text/css">
 	<link rel="stylesheet" href="<?=BASEURL?>/css/style.css" type="text/css">
 	<title> aCalendar </title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script> var baseurl = '<?=BASEURL?>'; </script>
+	
 </head>
 <body>
 

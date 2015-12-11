@@ -1,11 +1,28 @@
 <li>
 	<div class="myCal">
 		<a href="<?=BASEURL?>/index.php/calendar/add_calendar/">+</a>
-		<?php for($j=0; $j<count($calendars); $j++) { ?>
-
-			<a href="<?=BASEURL?>/index.php/calendar/show_other_calendar/<?php echo $calendars[$j]->idAgenda();?>"><?php echo $calendars[$j]->nom();?></a>
+		<?php for($j=0; $j<count($calendars); $j++) {
+			if($j+1==$num)
+			{?>
+					<a  class="but" style="color: #C8F0C8;"><?php echo $calendars[$j]->nom();?></a>
+				<?php }else {?>
+					<a  class="but"><?php echo $calendars[$j]->nom();?></a>
+			<?php } ?>
+			<div class="propos" style="display: none;">
+				<a href="<?=BASEURL?>/index.php/calendar/edit_calendar/<?php echo $calendars[$j]->idAgenda();?>">Editer</a>
+				<a href="<?=BASEURL?>/index.php/calendar/show_other_calendar/<?php echo $calendars[$j]->idAgenda();?>">Voir</a>
+			</div>
 		<?php } ?>
 	</div>
+
+	<script type="text/javascript">
+
+		var hiddenBox = $( ".propos" );
+		$( ".but" ).on( "click", function( event ) {
+			hiddenBox.show("slow");
+		});
+	</script>
+
 	<div class="actualCal">
 		<h2>
 			<?php echo $title; ?>
@@ -116,5 +133,6 @@
 			echo '</table>';
 			?>
 		</p>
+
 	</div>
 </li>

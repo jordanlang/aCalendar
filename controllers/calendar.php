@@ -10,6 +10,53 @@ class Controller_Calendar
 	public function show_calendar() {
 		switch ($_SERVER['REQUEST_METHOD']) {
 			case 'GET' :
+				self::actualise_date_maintenant();
+				//si l'utilisateur est connecté on affiche la page de création d'une note
+				if(isset($_SESSION['user'])) {
+					$num=1;
+					$calendars = array();
+					$calendars=Agenda::get_by_user_login($_SESSION['user']);
+					$semaine = array();
+					$jourSemaine = array();
+					$activites = array();
+					//$activites =Activite::get_by_idUtilisateurAgendaDate($_SESSION['idUser'],$calendars[$num]->idAgenda(),$_SESSION['dateDebSemaineFr'],$_SESSION['dateFinSemaineFr']);
+					for($k=0;$k<7;$k++)
+					{
+						for($l=0;$l<24;$l++)
+						{
+
+						}
+						$semaine[$k]=$jourSemaine;
+
+					}
+
+
+
+					include 'views/calendar.php';
+				}
+				else {
+					$_SESSION['message']['type'] = 'error';
+					$_SESSION['message']['text'] = "You aren't connected";
+					include 'views/connexion.php';
+				}
+				break;
+
+			case 'POST' :
+				if(isset($_SESSION['user'])) {
+					include 'views/calendar.php';
+				}
+				else {
+					$_SESSION['message']['type'] = 'error';
+					$_SESSION['message']['text'] = "You aren't connected";
+					include 'views/connexion.php';
+				}
+				break;
+		}
+	}
+
+	public function show_other_calendar($num) {
+		switch ($_SERVER['REQUEST_METHOD']) {
+			case 'GET' :
 				//si l'utilisateur est connecté on affiche la page de création d'une note
 				if(isset($_SESSION['user'])) {
 					$calendars = array();
@@ -255,9 +302,9 @@ class Controller_Calendar
 					$_SESSION['jour'] = date("j");
 					$_SESSION['annee'] = date("y");
 
-					$dateDebSemaineFr = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+1,$_SESSION['annee']));
+					$_SESSION['dateDebSemaineFr'] = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+1,$_SESSION['annee']));
 					$datePrecise = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee']));
-					$dateFinSemaineFr = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+7,$_SESSION['annee']));
+					$_SESSION['$dateFinSemaineFr'] = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+7,$_SESSION['annee']));
 
 					include 'views/calendar.php';
 				}
