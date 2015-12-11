@@ -194,30 +194,25 @@ class Activite extends Model_Base
 
 
 	public function add() {
-		echo "lol";
 		if(!is_null($this->_idActivite)) {
-			$q = self::$_db->prepare('INSERT INTO ACTIVITE (idActivite,idAgenda, idCategorie, idSimilaire, titre, descriptif, posGeographique,
-        dateCreation, dateUpdate, dateDeb, dateFin, numSemaine, numJour,
-        periodicite, occurences, priorite) VALUES (:idActivite,:idAgenda,1,
+			$q = self::$_db->prepare('INSERT INTO ACTIVITE (idAgenda, idCategorie, idSimilaire, titre, descriptif, posGeographique, dateDeb, dateFin, numSemaine, numJour,
+        periodicite, occurences, priorite) VALUES (:idAgenda,1,
         :idSimilaire,
-        :titre, :descriptif, :posGeographique, sysdate, sysdate,
-        :dateDeb, :dateFin, :numSemaine, :numJour, :periodicite, :occurences,
+        :titre, :descriptif, :posGeographique, :dateDeb, :dateFin, :numSemaine, :numJour, :periodicite, :occurences,
         :priorite)');
-			echo $this->_idAgenda;
-			echo $this->_idCategorie;
-			echo $this->_idSimilaire;
-			echo $this->_titre;
-			echo $this->_descriptif;
-			echo $this->_posGeographique;
-			echo $this->_dateCreation;
-			echo $this->_dateDeb;
-			echo $this->_dateFin;
-			echo $this->_numSemaine;
-			echo $this->_numJour;
-			echo $this->_periodicite;
-			echo $this->_occurences;
-			echo $this->_priorite;
-			$q->bindValue(':idActivite', $this->_idActivite, PDO::PARAM_INT);
+			/*echo $this->_idAgenda.' ';
+			echo $this->_idSimilaire.' ';
+			echo $this->_titre.' ';
+			echo $this->_descriptif.' ';
+			echo $this->_posGeographique.' ';
+			echo $this->_dateDeb.' ';
+			echo $this->_dateFin.' ';
+			echo $this->_numSemaine.' ';
+			echo $this->_numJour.' ';
+			echo $this->_periodicite.' ';
+			echo $this->_occurences.' ';
+			echo $this->_priorite.' ';*/
+
       $q->bindValue(':idAgenda', $this->_idAgenda, PDO::PARAM_INT);
       //$q->bindValue(':idCategorie', $this->_idCategorie, PDO::PARAM_INT);
 			$q->bindValue(':idSimilaire', $this->_idSimilaire, PDO::PARAM_INT);
@@ -231,9 +226,7 @@ class Activite extends Model_Base
 			$q->bindValue(':periodicite', $this->_periodicite, PDO::PARAM_STR);
 			$q->bindValue(':occurences', $this->_occurences, PDO::PARAM_INT);
 			$q->bindValue(':priorite', $this->_priorite, PDO::PARAM_INT);
-			echo 'lol';
 			$q->execute();
-			echo "lol3";
 		}
 	}
 
@@ -342,13 +335,13 @@ class Activite extends Model_Base
 		return $activites;
 	}
 
-	public static function get_by_idUtilisateurAgendaDate($idUtilisateur,$idAgenda,$date, $dateFin) {
-    $s = self::$_db->prepare('SELECT * FROM ACTIVITE where idUtilisateur =:id
-			AND idAgenda = :idAgenda AND dateDeb>=:dateDeb AND dateFin<:dateFin' );
+	public static function get_by_idUtilisateurAgendaDate($idUtilisateur,$idAgenda,$date_debut, $date_fin) {
+    	//$s = self::$_db->prepare('SELECT * FROM ACTIVITE where idUtilisateur =:id');
+    	$s = self::$_db->prepare('SELECT * FROM ACTIVITE ac JOIN AGENDA ag ON ac.idAgenda = ag.idAgenda where ag.idUtilisateur = :id AND ac.idAgenda = :idAgenda AND ac.dateDeb >= :dateDeb AND ac.dateFin < :dateFin');
 		$s->bindValue(':id', $idUtilisateur, PDO::PARAM_INT);
 		$s->bindValue(':idAgenda', $idAgenda, PDO::PARAM_INT);
-		$s->bindValue(':dateDeb', $date, PDO::PARAM_STR);
-		$s->bindValue(':dateFin', $dateFin, PDO::PARAM_STR);
+		$s->bindValue(':dateDeb', $date_debut, PDO::PARAM_STR);
+		$s->bindValue(':dateFin', $date_fin, PDO::PARAM_STR);
 		$s->execute();
     $activites = array();
 		while($data = $s->fetch(PDO::FETCH_ASSOC)) {
@@ -357,9 +350,7 @@ class Activite extends Model_Base
         $data['descriptif'],$data['posGeographique'],$data['dateCreation'],
         $data['dateUpdate'], $data['dateDeb'],$data['dateFin'],
         $data['numSemaine'],$data['numJour'],$data['periodicite'],
-        $data['occurences'],$data['priorite']
-
-      );
+        $data['occurences'],$data['priorite']);
 		}
 		return $activites;
 	}

@@ -118,7 +118,7 @@
 							if($j==$jour && $h==$heure+1 && date("U", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee'])) == date("U", mktime(0,0,0,date('n'),date('j'),date('y'))))
 							{
 								echo '<td style="background-color: #C8F0C8;">';
-								if($heures[$h][$j]!=NULL)
+								if($heure_jour[$h][$j]!=NULL)
 									echo '<a href="<?=BASEURL?>/index.php/activite/show/'.$heures[$h][$j]->idActivite().'">'.$heures[$h][$j]->titre().'</a>';
 								echo '</td>';
 							}

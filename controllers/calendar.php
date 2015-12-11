@@ -18,35 +18,32 @@ class Controller_Calendar
 				$_SESSION['jour'] = date("j");
 				$_SESSION['annee'] = date("y");
 
-				$dateDebSemaineFr = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+1,$_SESSION['annee']));
-				$datePrecise = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee']));
-				$dateFinSemaineFr = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+7,$_SESSION['annee']));
+				$dateDebSemaineFr = date("Y-n-j H:i:s", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+1,$_SESSION['annee']));
+				$datePrecise = date("Y-n-j H:i:s", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee']));
+				$dateFinSemaineFr = date("Y-n-j H:i:s", mktime(23,59,0,$_SESSION['mois'],$_SESSION['jour']-$jour+7,$_SESSION['annee']));
 				//self::actualise_date_maintenant();
 				//si l'utilisateur est connecté on affiche la page de création d'une note
 				if(isset($_SESSION['user'])) {
 					$num=1;
-					$calendars = array();
 					$calendars=Agenda::get_by_user_login($_SESSION['user']);
-					$heures = array();
-					$jourSemaine = array();
-					$activites = array();
 					if(!empty($calendars))
 					{
 						$activites = Activite::get_by_idUtilisateurAgendaDate($_SESSION['idUser'],$calendars[$num-1]->idAgenda(),$dateDebSemaineFr,$dateFinSemaineFr);
+						echo count($activites);
 						for($m=0;$m<count($activites);$m++)
 						{
 							for($l=0;$l<24;$l++)
 							{
 								for($k=0;$k<7;$k++)
 								{
-
-									if(date("H",$activites->dateDeb())== $l && date("d",$activites->dateDeb())==date("d",$_SESSION['dateDebSemaineFr'])+$k)
-										$jourSemaine[$k]=$activites[$m];
+									if(date("H",$activites[$m]->dateDeb())== $l && date("d",$activites[$m]->dateDeb())==date("d",$_SESSION['dateDebSemaineFr'])+$k) {
+										echo "trouvé";
+										$heure_jour[$l][$k] = $activites[$m];
+									}
 									else {
-										$jourSemaine[$k]=NULL;
+										$heure_jour[$l][$k] = NULL;
 									}
 								}
-								$heures[$l]=$jourSemaine;
 							}
 						}
 					}
@@ -173,10 +170,22 @@ class Controller_Calendar
 			case 'POST' :
 				if(isset($_SESSION['user'])) {
 					$u = Utilisateur::get_by_login($_SESSION['user']);
-					
-					if(!empty($_POST['titre']) && !empty($_POST['description']) && !empty($_POST['location']) && isset($_POST['datedeb']) && isset($_POST['datefin']) && !empty($_POST['occurences'])) {
+
+					if(!empty($_POST['titre']) && !empty($_POST['description']) && !empty($_POST['location']) && !empty($_POST['datedeb']) && !empty($_POST['datefin'])) {
 						
-						$act = new Activite(1, $_POST['agenda'], $_POST['categorie'], $_SESSION['similaire'], $_POST['titre'], $_POST['description'], $_POST['location'], '1', '1', $_POST['datedeb'], $_POST['datefin'], 1, 1, $_POST['periodicite'], $_POST['occurences'], $_POST['priorite']);
+						if(empty($_POST['occurences'])) {
+							$occ = 0;
+						} else {
+							$occ = $_POST['occurences'];
+						}
+
+						$date_debut = date_create_from_format('Y-n-j?H:i', $_POST['datedeb']);
+						$date_debut = $date_debut->format('Y-n-j H:i');
+
+						$date_fin = date_create_from_format('Y-n-j?H:i', $_POST['datefin']);
+						$date_fin = $date_fin->format('Y-n-j H:i');
+
+						$act = new Activite(1, $_POST['agenda'], $_POST['categorie'], $_SESSION['similaire'], $_POST['titre'], $_POST['description'], $_POST['location'], '1', '1', $date_debut, $date_fin, 1, 1, $_POST['periodicite'], $occ, $_POST['priorite']);
 						$act->add();
 
 						$_SESSION['message']['type'] = 'success';

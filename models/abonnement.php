@@ -13,7 +13,7 @@ class Abonnement extends Model_Base
 	public function __construct($idUtilisateur, $idAgenda, $priorite) {
 		$this->set_idUtilisateur($idUtilisateur);
 		$this->set_idAgenda($idAgenda);
-		$this->set_aime($priorite);
+		$this->set_priorite($priorite);
 	}
 
 	//get
@@ -70,6 +70,14 @@ class Abonnement extends Model_Base
 			$q->execute();
 			$this->_idAgenda = null;
 		}
+	}
+
+	public static function delete($idUtilisateur, $idAgenda)
+	{
+		$q = self::$_db->prepare('DELETE FROM ABONNEMENT WHERE idUtilisateur = :idUtilisateur AND idAgenda = :idAgenda');
+		$q->bindValue(':idUtilisateur', $idUtilisateur);
+		$q->bindValue(':idAgenda', $idAgenda);
+		$q->execute();
 	}
 
 	public static function get_by_agenda($idAgenda) {
