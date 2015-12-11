@@ -9,7 +9,7 @@
 					<a  class="but"><?php echo $calendars[$j]->nom();?></a>
 			<?php } ?>
 			<div class="propos" style="display: none;">
-				<a href="<?=BASEURL?>/index.php/calendar/edit_calendar/<?php echo $calendars[$j]->idAgenda();?>">Editer</a>
+				<a href="<?=BASEURL?>/index.php/calendar/add_activite/<?php //echo $calendars[$j]->idAgenda();?>">Editer</a>
 				<a href="<?=BASEURL?>/index.php/calendar/show_other_calendar/<?php echo $calendars[$j]->idAgenda();?>">Voir</a>
 			</div>
 		<?php } ?>

@@ -1,4 +1,5 @@
-<h2 class="text-center">Création d'un nouveau calendrier</h2>
+<div class="create">
+	<h2 class="text-center">Création d'un nouveau calendrier</h2>
 
 <form method="post" action="<?=BASEURL?>/index.php/calendar/add_calendar">
 	<div class="formline">
@@ -14,8 +15,9 @@
 	<br>
 	<input type="checkbox" name="prive" value="">
 	<label for="prive">Calendrier public</label>
-	
+
 	<div class="formline">
 		<input type="submit" value="Create">
 	</div>
 </form>
+</div>

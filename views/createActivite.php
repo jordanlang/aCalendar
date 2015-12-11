@@ -1,8 +1,8 @@
-<?php 
+<?php
 	require_once 'models/agenda.php';
 	require_once 'models/categorie.php';
 ?>
-
+<div class="create">
 <h2 class="text-center">Création d'une nouvelle activité</h2>
 
 <form method="post" action="<?=BASEURL?>/index.php/calendar/add_activite">
@@ -52,7 +52,7 @@
            	<option value="J">Jour</option>
            	<option value="S">Semaine</option>
            	<option value="M">Mois</option>
-           	<option value="A">Année</option>          
+           	<option value="A">Année</option>
 	</select>
 	</div>
 	<div class="formline">
@@ -71,3 +71,4 @@
 		<input type="submit" value="Create">
 	</div>
 </form>
+</div>

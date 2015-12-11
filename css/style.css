@@ -69,6 +69,7 @@ main {
 	width: 88%;
 	margin-top: 168px;
 	width: 100%;
+	display: flex;
 }
 
 @media screen and (max-width: 1080px) {
@@ -128,7 +129,10 @@ a:hover {
 	color: green;
 }
 
-.text-center { text-align: center; }
+.text-center {
+	text-align: center;
+	width: 100%;
+ }
 .text-right { text-align: right; }
 
 .text-small { font-size: 0.75em; }
@@ -152,11 +156,19 @@ form {
 	margin: 2rem auto;
 	padding: 2rem;
 	border: 1px solid black;
+	width: 70%;
+	border-color: #C8F0C8;
+	background-color: white;
 }
 form.noborder {
 	border: none;
 }
-
+.create {
+	background-color: gainsboro;
+	width: 100%;
+	margin-bottom: 10rem;
+	height: 100%
+}
 .formline {
 	display: flex;
 }
@@ -230,4 +242,13 @@ main li{
 
 td, th {
 	border: 1px solid gray;
+}
+
+.propos {
+	text-align: center;
+}
+
+.propos a {
+	font-size: 2rem;
+	color: #C8F0C8;
 }
