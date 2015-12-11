@@ -109,7 +109,7 @@ class Commentaire extends Model_Base
 	}
 
 	public static function get_by_activite($idActivite) {
-		$s = self::$_db->prepare('SELECT * FROM COMMENTAIRE where idActivite = :id AND idParent=NULL');
+		$s = self::$_db->prepare('SELECT * FROM COMMENTAIRE where idActivite = :id AND idParent IS NULL');
 		$s->bindValue(':id', $idActivite, PDO::PARAM_INT);
 		$s->execute();
 		$activites = array();

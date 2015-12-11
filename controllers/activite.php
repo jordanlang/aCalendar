@@ -17,6 +17,7 @@ class Controller_Activite
     {
       $UtilAime[$i]=Utilisateur::get_by_id($aime[$i]->idUtilisateur());
     }
+
     $commentateur=Utilisateur::get_by_id($comm->idUtilisateur());
     include 'views/commentaire.php';
     $childs=Commentaire::get_childs($comm->idComm());
@@ -58,5 +59,25 @@ class Controller_Activite
 				}
 				break;
 		}
+
+    public static function doCommentaire($idActivite,$idParent,$descriptif)
+    {
+  		switch ($_SERVER['REQUEST_METHOD']) {
+  			case 'GET' :
+  				break;
+
+  			case 'POST' :
+  				if(isset($_SESSION['user'])) {
+            $c= new Commentaire(1,$idActivite,$idParent,$_SESSION['idUser'],'',$descriptif);
+            $c->add();
+  					self::show($idActivite);
+  				}
+  				else {
+  					$_SESSION['message']['type'] = 'error';
+  					$_SESSION['message']['text'] = "You aren't connected";
+  					include 'views/connexion.php';
+  				}
+  				break;
+  		}
 	}
 }
