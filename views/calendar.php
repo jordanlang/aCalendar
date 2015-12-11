@@ -1,16 +1,16 @@
 <li>
 	<div class="myCal">
 		<a href="<?=BASEURL?>/index.php/calendar/add_calendar/">+</a>
-		<?php for($j=0; $j<count($calendars); $j++) {
-			if($j+1==$num)
+		<?php for($j=0; $j<count($all_agendas); $j++) {
+			if($j==$_SESSION['$num'])
 			{?>
-					<a  class="but" style="color: #C8F0C8;"><?php echo $calendars[$j]->nom();?></a>
+					<a  class="but" style="color: #C8F0C8;" id="<?=$j?>"><?php echo $all_agendas[$j]->nom();?></a>
 				<?php }else {?>
-					<a  class="but"><?php echo $calendars[$j]->nom();?></a>
+					<a  class="but" id="<?=$j?>"><?php echo $all_agendas[$j]->nom();?></a>
 			<?php } ?>
 			<div class="propos" style="display: none;">
-				<a href="<?=BASEURL?>/index.php/calendar/add_activite/<?php //echo $calendars[$j]->idAgenda();?>">Editer</a>
-				<a href="<?=BASEURL?>/index.php/calendar/show_other_calendar/<?php echo $calendars[$j]->idAgenda();?>">Voir</a>
+				<a href="<?=BASEURL?>/index.php/calendar/add_activite/<?=$j?>">Editer</a>
+				<a href="<?=BASEURL?>/index.php/calendar/show_other_calendar/<?=$j?>">Voir</a>
 			</div>
 		<?php } ?>
 	</div>
@@ -35,7 +35,6 @@
 			$jour = date("w");
 			//echo 'jour courant : '.$jour;
 			$heure = date("H");
-			$num=0;
 
 			$jourTexte = array('',1=>'lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.', 'dim.');
 			$plageH = array(1=>'00:00','01:00','02:00','03:00','04:00','05:00','06:00',
@@ -59,7 +58,6 @@
 			    case 'October' : $nom_mois = 'Octobre'; break;
 			    case 'November' : $nom_mois = 'Novembre'; break;
 			    case 'December' : $nom_mois = 'Décembre'; break;
-
 			}
 
 
@@ -99,46 +97,78 @@
 			    echo '</tr>';
 
 			    // les 2 plages horaires : matin - midi
-			    for ($h = 1; $h <= 24; $h++)
+			    for ($h = 0; $h < 24; $h++)
 			    {
-						if($h==$heure+1)
-							echo '<tr>
-							<th>
-									<div style="color: #C8F0C8;font-size: small;">'.$plageH[$h].'</div>
-							</th>';
-						else
-			        echo '<tr>
-			        <th>
-			            <div style="color: gray;font-size: small;">'.$plageH[$h].'</div>
-			        </th>';
+					if($h==$heure+1) {
+						echo '<tr>
+						<th>
+								<div style="color: #C8F0C8;font-size: small;">'.$plageH[$h].'</div>
+						</th>';
+					} else {
+						echo '<tr>
+				        <th>
+				            <div style="color: gray;font-size: small;">'.$plageH[$h].'</div>
+				        </th>';
+					}
 
 			        // les infos pour chaque jour
-            for ($j = 1; $j < 8; $j++)
-            {
-							if($j==$jour && $h==$heure+1 && date("U", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee'])) == date("U", mktime(0,0,0,date('n'),date('j'),date('y'))))
-							{
+		            for ($j = 0; $j < 7; $j++)
+		            {
+						if($j==$jour && $h==$heure+1 && date("U", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee'])) == date("U", mktime(0,0,0,date('n'),date('j'),date('y'))))
+						{
+							
+							if(!is_null($heure_jour[$h-1][$j])) {
+
+								$r = rand(1,4);
+								if($r == 1) { $color = '#0000FF'; }
+								else if($r == 2) { $color = '#FF0033'; }
+								else if($r == 3) { $color = '#FFFF33'; }
+								else { $color = '#00CC00'; }
+
+								echo '<td style="background-color: '.$color.';">';
+								echo '<a href="'.BASEURL.'/index.php/activite/show/'.$heure_jour[$h-1][$j]->idActivite().'">'.$heure_jour[$h-1][$j]->titre().'</a>';
+							} else {
 								echo '<td style="background-color: #C8F0C8;">';
-								if($heure_jour[$h][$j]!=NULL)
-									echo '<a href="<?=BASEURL?>/index.php/activite/show/'.$heures[$h][$j]->idActivite().'">'.$heures[$h][$j]->titre().'</a>';
+							}
+							echo '</td>';
+						}
+						else {
+							if($j==5 || $j==6){
+								if(!is_null($heure_jour[$h-1][$j])) {
+
+									$r = rand(1,4);
+									if($r == 1) { $color = '#0000FF'; }
+									else if($r == 2) { $color = '#FF0033'; }
+									else if($r == 3) { $color = '#FFFF33'; }
+									else { $color = '#00CC00'; }
+
+									echo '<td style="background-color: '.$color.';">';
+									echo '<a href="'.BASEURL.'/index.php/activite/show/'.$heure_jour[$h-1][$j]->idActivite().'">'.$heure_jour[$h-1][$j]->titre().'</a>';
+								} else {
+									echo '<td style="background-color: rgb(228, 228, 228);">';
+								}
 								echo '</td>';
 							}
 							else {
-								if($j==6 || $j==7){
-	                echo '<td style="background-color: rgb(228, 228, 228);">';
-									if($heures[$h][$j]!=NULL)
-										echo '<a href="<?=BASEURL?>/index.php/activite/show/'.$heures[$h][$j]->idActivite().'">'.$heures[$h][$j]->titre().'</a>';
-									echo '</td>';
-								}
-								else{
+								if(!is_null($heure_jour[$h-1][$j])) {
+
+									$r = rand(1,4);
+									if($r == 1) { $color = '#0000FF'; }
+									else if($r == 2) { $color = '#FF0033'; }
+									else if($r == 3) { $color = '#FFFF33'; }
+									else { $color = '#00CC00'; }
+
+									echo '<td style="background-color: '.$color.';">';
+									echo '<a href="'.BASEURL.'/index.php/activite/show/'.$heure_jour[$h-1][$j]->idActivite().'">'.$heure_jour[$h-1][$j]->titre().'</a>';
+								} else {
 									echo '<td>';
-									if($heures[$h][$j]!=NULL)
-										echo '<a href="<?=BASEURL?>/index.php/activite/show/'.$heures[$h][$j]->idActivite().'">'.$heures[$h][$j]->titre().'</a>';
-									echo '</td>';
 								}
-          		}
-						}
-						echo '</td>
-						</tr>';
+								echo '</td>';
+							}
+      					}
+					}
+					echo '</td>
+					</tr>';
 			    }
 			echo '</table>';
 			?>

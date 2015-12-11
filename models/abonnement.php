@@ -91,6 +91,17 @@ class Abonnement extends Model_Base
 		return $abonnements;
 	}
 
+	public static function get_by_user($idUtilisateur) {
+		$s = self::$_db->prepare('SELECT * FROM ABONNEMENT where idUtilisateur = :id');
+		$s->bindValue(':id', $idUtilisateur, PDO::PARAM_INT);
+		$s->execute();
+		$abonnements = array();
+		while ($data = $s->fetch(PDO::FETCH_ASSOC)) {
+			$abonnements[] = new Abonnement($data['idUtilisateur'], $data['idAgenda'], $data['priorite']);
+		}
+		return $abonnements;
+	}
+
 	public static function exist($idUtilisateur, $idAgenda) {
 		$s = self::$_db->prepare('SELECT * FROM ABONNEMENT WHERE idUtilisateur=:idUtilisateur AND idAgenda = :idAgenda');
 		$s->bindValue(':idUtilisateur', $idUtilisateur, PDO::PARAM_INT);

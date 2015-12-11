@@ -165,11 +165,11 @@ class Activite extends Model_Base
 	}
 
   public function set_dateDeb($v) {
-		$this->_dateDeb = strval($v);
+		$this->_dateDeb = $v;
 	}
 
   public function set_dateFin($v) {
-		$this->_dateFin = strval($v);
+		$this->_dateFin = $v;
 	}
 
   public function set_numSemaine($v) {

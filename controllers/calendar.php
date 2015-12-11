@@ -3,6 +3,7 @@
 require_once 'models/agenda.php';
 require_once 'models/activite.php';
 require_once 'models/categorie.php';
+require_once 'models/abonnement.php';
 require_once 'models/utilisateur.php';
 
 class Controller_Calendar
@@ -24,24 +25,33 @@ class Controller_Calendar
 				//self::actualise_date_maintenant();
 				//si l'utilisateur est connecté on affiche la page de création d'une note
 				if(isset($_SESSION['user'])) {
-					$num=1;
-					$calendars=Agenda::get_by_user_login($_SESSION['user']);
-					if(!empty($calendars))
+					$_SESSION['num'] = 0;
+
+					$abonnements = Abonnement::get_by_user($_SESSION['idUser']);
+					$mes_agendas = Agenda::get_by_user_login($_SESSION['user']);
+					$all_agendas = array();
+					for($i=0; $i<count($mes_agendas); $i++) {
+						$all_agendas[] = Agenda::get_by_id($mes_agendas[$i]->idAgenda());
+					}
+					for($i=0; $i<count($abonnements); $i++) {
+						$all_agendas[] = Agenda::get_by_id($abonnements[$i]->idAgenda());
+					}
+
+					if(!empty($all_agendas))
 					{
-						$activites = Activite::get_by_idUtilisateurAgendaDate($_SESSION['idUser'],$calendars[$num-1]->idAgenda(),$dateDebSemaineFr,$dateFinSemaineFr);
-						echo count($activites);
+						$activites = Activite::get_by_idUtilisateurAgendaDate($_SESSION['idUser'],$all_agendas[$_SESSION['num']]->idAgenda(),$dateDebSemaineFr,$dateFinSemaineFr);
 						for($m=0;$m<count($activites);$m++)
 						{
 							for($l=0;$l<24;$l++)
 							{
 								for($k=0;$k<7;$k++)
 								{
-									if(date("H",$activites[$m]->dateDeb())== $l && date("d",$activites[$m]->dateDeb())==date("d",$_SESSION['dateDebSemaineFr'])+$k) {
-										echo "trouvé";
+									$date_deb_inter = date_create_from_format('Y-n-j H:i:s',$activites[$m]->dateDeb());
+									$date_fin_inter = date_create_from_format('Y-n-j H:i:s',$activites[$m]->dateFin());
+									$date_debsem_inter = date_create_from_format('Y-n-j H:i:s',$dateDebSemaineFr);
+
+									if($date_deb_inter->format('G') <= $l && $date_fin_inter->format('G') > $l && $date_deb_inter->format('j') == $date_debsem_inter->format('j')+$k) {
 										$heure_jour[$l][$k] = $activites[$m];
-									}
-									else {
-										$heure_jour[$l][$k] = NULL;
 									}
 								}
 							}
@@ -70,13 +80,47 @@ class Controller_Calendar
 		}
 	}
 
-	public function show_other_calendar($num) {
+	public function show_other_calendar($numero) {
 		switch ($_SERVER['REQUEST_METHOD']) {
 			case 'GET' :
+
+				$dateDebSemaineFr = date("Y-n-j H:i:s", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+1,$_SESSION['annee']));
+				$datePrecise = date("Y-n-j H:i:s", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee']));
+				$dateFinSemaineFr = date("Y-n-j H:i:s", mktime(23,59,0,$_SESSION['mois'],$_SESSION['jour']-$jour+7,$_SESSION['annee']));
 				//si l'utilisateur est connecté on affiche la page de création d'une note
 				if(isset($_SESSION['user'])) {
-					$calendars = array();
-					$calendars=Agenda::get_by_user_login($_SESSION['user']);
+					$_SESSION['num'] = $numero;
+
+					$abonnements = Abonnement::get_by_user($_SESSION['idUser']);
+					$mes_agendas = Agenda::get_by_user_login($_SESSION['user']);
+					$all_agendas = array();
+					for($i=0; $i<count($mes_agendas); $i++) {
+						$all_agendas[] = Agenda::get_by_id($mes_agendas[$i]->idAgenda());
+					}
+					for($i=0; $i<count($abonnements); $i++) {
+						$all_agendas[] = Agenda::get_by_id($abonnements[$i]->idAgenda());
+					}
+					
+					if(!empty($all_agendas))
+					{
+						$activites = Activite::get_by_idUtilisateurAgendaDate($_SESSION['idUser'],$all_agendas[$_SESSION['num']]->idAgenda(),$dateDebSemaineFr,$dateFinSemaineFr);
+						for($m=0;$m<count($activites);$m++)
+						{
+							for($l=0;$l<24;$l++)
+							{
+								for($k=0;$k<7;$k++)
+								{
+									$date_deb_inter = date_create_from_format('Y-n-j H:i:s',$activites[$m]->dateDeb());
+									$date_fin_inter = date_create_from_format('Y-n-j H:i:s',$activites[$m]->dateFin());
+									$date_debsem_inter = date_create_from_format('Y-n-j H:i:s',$dateDebSemaineFr);
+
+									if($date_deb_inter->format('G') <= $l && $date_fin_inter->format('G') > $l && $date_deb_inter->format('j') == $date_debsem_inter->format('j')+$k) {
+										$heure_jour[$l][$k] = $activites[$m];
+									}
+								}
+							}
+						}
+					}
 					include 'views/calendar.php';
 				}
 				else {
@@ -229,33 +273,37 @@ class Controller_Calendar
 						$_SESSION['jour'] = $_SESSION['jour']+7;
 					}
 
-					$dateDebSemaineFr = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+1,$_SESSION['annee']));
-					$datePrecise = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee']));
-					$dateFinSemaineFr = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+7,$_SESSION['annee']));
+					$dateDebSemaineFr = date("Y-n-j H:i:s", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+1,$_SESSION['annee']));
+				$datePrecise = date("Y-n-j H:i:s", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee']));
+				$dateFinSemaineFr = date("Y-n-j H:i:s", mktime(23,59,0,$_SESSION['mois'],$_SESSION['jour']-$jour+7,$_SESSION['annee']));
 
-					$num=1;
-					$calendars = array();
-					$calendars=Agenda::get_by_user_login($_SESSION['user']);
-					$heures = array();
-					$jourSemaine = array();
-					$activites = array();
-					if(!empty($calendars))
+					$abonnements = Abonnement::get_by_user($_SESSION['idUser']);
+					$mes_agendas = Agenda::get_by_user_login($_SESSION['user']);
+					$all_agendas = array();
+					for($i=0; $i<count($mes_agendas); $i++) {
+						$all_agendas[] = Agenda::get_by_id($mes_agendas[$i]->idAgenda());
+					}
+					for($i=0; $i<count($abonnements); $i++) {
+						$all_agendas[] = Agenda::get_by_id($abonnements[$i]->idAgenda());
+					}
+
+					if(!empty($all_agendas))
 					{
-						$activites = Activite::get_by_idUtilisateurAgendaDate($_SESSION['idUser'],$calendars[$num-1]->idAgenda(),$_SESSION['dateDebSemaineFr'],$_SESSION['$dateFinSemaineFr']);
+						$activites = Activite::get_by_idUtilisateurAgendaDate($_SESSION['idUser'],$all_agendas[$_SESSION['num']]->idAgenda(),$dateDebSemaineFr,$dateFinSemaineFr);
 						for($m=0;$m<count($activites);$m++)
 						{
 							for($l=0;$l<24;$l++)
 							{
 								for($k=0;$k<7;$k++)
 								{
+									$date_deb_inter = date_create_from_format('Y-n-j H:i:s',$activites[$m]->dateDeb());
+									$date_fin_inter = date_create_from_format('Y-n-j H:i:s',$activites[$m]->dateFin());
+									$date_debsem_inter = date_create_from_format('Y-n-j H:i:s',$dateDebSemaineFr);
 
-									if(date("H",$activites->dateDeb())== $l && date("d",$activites->dateDeb())==date("d",$_SESSION['dateDebSemaineFr'])+$k)
-										$jourSemaine[$k]=$activites[$m];
-									else {
-										$jourSemaine[$k]=NULL;
+									if($date_deb_inter->format('G') <= $l && $date_fin_inter->format('G') > $l && $date_deb_inter->format('j') == $date_debsem_inter->format('j')+$k) {
+										$heure_jour[$l][$k] = $activites[$m];
 									}
 								}
-								$heures[$l]=$jourSemaine;
 							}
 						}
 					}
@@ -304,33 +352,37 @@ class Controller_Calendar
 						$_SESSION['jour'] = $_SESSION['jour'] - 7;
 					}
 
-					$dateDebSemaineFr = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+1,$_SESSION['annee']));
-					$datePrecise = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee']));
-					$dateFinSemaineFr = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+7,$_SESSION['annee']));
+					$dateDebSemaineFr = date("Y-n-j H:i:s", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+1,$_SESSION['annee']));
+				$datePrecise = date("Y-n-j H:i:s", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee']));
+				$dateFinSemaineFr = date("Y-n-j H:i:s", mktime(23,59,0,$_SESSION['mois'],$_SESSION['jour']-$jour+7,$_SESSION['annee']));
 
-					$num=1;
-					$calendars = array();
-					$calendars=Agenda::get_by_user_login($_SESSION['user']);
-					$heures = array();
-					$jourSemaine = array();
-					$activites = array();
-					if(!empty($calendars))
+					$abonnements = Abonnement::get_by_user($_SESSION['idUser']);
+					$mes_agendas = Agenda::get_by_user_login($_SESSION['user']);
+					$all_agendas = array();
+					for($i=0; $i<count($mes_agendas); $i++) {
+						$all_agendas[] = Agenda::get_by_id($mes_agendas[$i]->idAgenda());
+					}
+					for($i=0; $i<count($abonnements); $i++) {
+						$all_agendas[] = Agenda::get_by_id($abonnements[$i]->idAgenda());
+					}
+
+					if(!empty($all_agendas))
 					{
-						$activites = Activite::get_by_idUtilisateurAgendaDate($_SESSION['idUser'],$calendars[$num-1]->idAgenda(),$_SESSION['dateDebSemaineFr'],$_SESSION['$dateFinSemaineFr']);
+						$activites = Activite::get_by_idUtilisateurAgendaDate($_SESSION['idUser'],$all_agendas[$_SESSION['num']]->idAgenda(),$dateDebSemaineFr,$dateFinSemaineFr);
 						for($m=0;$m<count($activites);$m++)
 						{
 							for($l=0;$l<24;$l++)
 							{
 								for($k=0;$k<7;$k++)
 								{
+									$date_deb_inter = date_create_from_format('Y-n-j H:i:s',$activites[$m]->dateDeb());
+									$date_fin_inter = date_create_from_format('Y-n-j H:i:s',$activites[$m]->dateFin());
+									$date_debsem_inter = date_create_from_format('Y-n-j H:i:s',$dateDebSemaineFr);
 
-									if(date("H",$activites->dateDeb())== $l && date("d",$activites->dateDeb())==date("d",$_SESSION['dateDebSemaineFr'])+$k)
-										$jourSemaine[$k]=$activites[$m];
-									else {
-										$jourSemaine[$k]=NULL;
+									if($date_deb_inter->format('G') <= $l && $date_fin_inter->format('G') > $l && $date_deb_inter->format('j') == $date_debsem_inter->format('j')+$k) {
+										$heure_jour[$l][$k] = $activites[$m];
 									}
 								}
-								$heures[$l]=$jourSemaine;
 							}
 						}
 					}
@@ -368,33 +420,37 @@ class Controller_Calendar
 					$_SESSION['jour'] = date("j");
 					$_SESSION['annee'] = date("y");
 
-					$_SESSION['dateDebSemaineFr'] = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+1,$_SESSION['annee']));
-					$datePrecise = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee']));
-					$_SESSION['$dateFinSemaineFr'] = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+7,$_SESSION['annee']));
+					$dateDebSemaineFr = date("Y-n-j H:i:s", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+1,$_SESSION['annee']));
+				$datePrecise = date("Y-n-j H:i:s", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee']));
+				$dateFinSemaineFr = date("Y-n-j H:i:s", mktime(23,59,0,$_SESSION['mois'],$_SESSION['jour']-$jour+7,$_SESSION['annee']));
 
-					$num=1;
-					$calendars = array();
-					$calendars=Agenda::get_by_user_login($_SESSION['user']);
-					$heures = array();
-					$jourSemaine = array();
-					$activites = array();
-					if(!empty($calendars))
+					$abonnements = Abonnement::get_by_user($_SESSION['idUser']);
+					$mes_agendas = Agenda::get_by_user_login($_SESSION['user']);
+					$all_agendas = array();
+					for($i=0; $i<count($mes_agendas); $i++) {
+						$all_agendas[] = Agenda::get_by_id($mes_agendas[$i]->idAgenda());
+					}
+					for($i=0; $i<count($abonnements); $i++) {
+						$all_agendas[] = Agenda::get_by_id($abonnements[$i]->idAgenda());
+					}
+
+					if(!empty($all_agendas))
 					{
-						$activites = Activite::get_by_idUtilisateurAgendaDate($_SESSION['idUser'],$calendars[$num-1]->idAgenda(),$_SESSION['dateDebSemaineFr'],$_SESSION['$dateFinSemaineFr']);
+						$activites = Activite::get_by_idUtilisateurAgendaDate($_SESSION['idUser'],$all_agendas[$_SESSION['num']]->idAgenda(),$dateDebSemaineFr,$dateFinSemaineFr);
 						for($m=0;$m<count($activites);$m++)
 						{
 							for($l=0;$l<24;$l++)
 							{
 								for($k=0;$k<7;$k++)
 								{
+									$date_deb_inter = date_create_from_format('Y-n-j H:i:s',$activites[$m]->dateDeb());
+									$date_fin_inter = date_create_from_format('Y-n-j H:i:s',$activites[$m]->dateFin());
+									$date_debsem_inter = date_create_from_format('Y-n-j H:i:s',$dateDebSemaineFr);
 
-									if(date("H",$activites->dateDeb())== $l && date("d",$activites->dateDeb())==date("d",$_SESSION['dateDebSemaineFr'])+$k)
-										$jourSemaine[$k]=$activites[$m];
-									else {
-										$jourSemaine[$k]=NULL;
+									if($date_deb_inter->format('G') <= $l && $date_fin_inter->format('G') > $l && $date_deb_inter->format('j') == $date_debsem_inter->format('j')+$k) {
+										$heure_jour[$l][$k] = $activites[$m];
 									}
 								}
-								$heures[$l]=$jourSemaine;
 							}
 						}
 					}
