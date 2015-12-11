@@ -5,7 +5,7 @@
 
 <h2 class="text-center">Création d'une nouvelle activité</h2>
 
-<form method="post" action="<?=BASEURL?>/index.php/calendar/add_calendar">
+<form method="post" action="<?=BASEURL?>/index.php/calendar/add_activite">
 
 	<div class="formline">
 		<label for="agenda">Calendrier</label>

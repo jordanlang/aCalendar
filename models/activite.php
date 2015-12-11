@@ -181,7 +181,7 @@ class Activite extends Model_Base
 	}
 
   public function set_periodicite($v) {
-		$this->_periodicite = (int)($v);
+		$this->_periodicite = strval($v);
 	}
 
   public function set_occurences($v) {
@@ -194,30 +194,46 @@ class Activite extends Model_Base
 
 
 	public function add() {
-		if(!is_null($this->_id)) {
-			$q = self::$_db->prepare('INSERT INTO ACTIVITE (idAgenda, idCategorie, idSimilaire, titre, descriptif, posGeographique,
+		echo "lol";
+		if(!is_null($this->_idActivite)) {
+			$q = self::$_db->prepare('INSERT INTO ACTIVITE (idActivite,idAgenda, idCategorie, idSimilaire, titre, descriptif, posGeographique,
         dateCreation, dateUpdate, dateDeb, dateFin, numSemaine, numJour,
-        periodicite, occurences, priorite) VALUES (:idAgenda,:idCategorie,
+        periodicite, occurences, priorite) VALUES (:idActivite,:idAgenda,1,
         :idSimilaire,
-        :titre, :descriptif, :posGeographique, :dateCreation, sysdate,
+        :titre, :descriptif, :posGeographique, sysdate, sysdate,
         :dateDeb, :dateFin, :numSemaine, :numJour, :periodicite, :occurences,
         :priorite)');
+			echo $this->_idAgenda;
+			echo $this->_idCategorie;
+			echo $this->_idSimilaire;
+			echo $this->_titre;
+			echo $this->_descriptif;
+			echo $this->_posGeographique;
+			echo $this->_dateCreation;
+			echo $this->_dateDeb;
+			echo $this->_dateFin;
+			echo $this->_numSemaine;
+			echo $this->_numJour;
+			echo $this->_periodicite;
+			echo $this->_occurences;
+			echo $this->_priorite;
+			$q->bindValue(':idActivite', $this->_idActivite, PDO::PARAM_INT);
       $q->bindValue(':idAgenda', $this->_idAgenda, PDO::PARAM_INT);
-      $q->bindValue(':idCategorie', $this->_idCategorie, PDO::PARAM_INT);
+      //$q->bindValue(':idCategorie', $this->_idCategorie, PDO::PARAM_INT);
 			$q->bindValue(':idSimilaire', $this->_idSimilaire, PDO::PARAM_INT);
 			$q->bindValue(':titre', $this->_titre, PDO::PARAM_STR);
 			$q->bindValue(':descriptif', $this->_descriptif, PDO::PARAM_STR);
-			$q->bindValue(':posGeographique', $this->_posGeographique, PDO::PARAM_STR)
-      ;
-			$q->bindValue(':dateCreation', $this->_dateCreation, PDO::PARAM_STR);
-      $q->bindValue(':dateDeb', $this->_dateCreation, PDO::PARAM_STR);
-      $q->bindValue(':dateFin', $this->_dateCreation, PDO::PARAM_STR);
-      $q->bindValue(':numSemaine', $this->_numSemaine, PDO::PARAM_INT);
-      $q->bindValue(':numJour', $this->_numJour, PDO::PARAM_INT);
-      $q->bindValue(':periodicite', $this->_periodicite, PDO::PARAM_STR);
-      $q->bindValue(':occurences', $this->_occurences, PDO::PARAM_INT);
-      $q->bindValue(':priorite', $this->_priorite, PDO::PARAM_INT);
+			$q->bindValue(':posGeographique', $this->_posGeographique, PDO::PARAM_STR);
+			$q->bindValue(':dateDeb', $this->_dateDeb, PDO::PARAM_STR);
+			$q->bindValue(':dateFin', $this->_dateFin, PDO::PARAM_STR);
+			$q->bindValue(':numSemaine', $this->_numSemaine, PDO::PARAM_INT);
+			$q->bindValue(':numJour', $this->_numJour, PDO::PARAM_INT);
+			$q->bindValue(':periodicite', $this->_periodicite, PDO::PARAM_STR);
+			$q->bindValue(':occurences', $this->_occurences, PDO::PARAM_INT);
+			$q->bindValue(':priorite', $this->_priorite, PDO::PARAM_INT);
+			echo 'lol';
 			$q->execute();
+			echo "lol3";
 		}
 	}
 

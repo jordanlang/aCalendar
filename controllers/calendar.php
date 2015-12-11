@@ -173,11 +173,11 @@ class Controller_Calendar
 			case 'POST' :
 				if(isset($_SESSION['user'])) {
 					$u = Utilisateur::get_by_login($_SESSION['user']);
+					
 					if(!empty($_POST['titre']) && !empty($_POST['description']) && !empty($_POST['location']) && isset($_POST['datedeb']) && isset($_POST['datefin']) && !empty($_POST['occurences'])) {
 						
-						//TODO
-						$activite = new Activite(1, $_POST['agenda'], $_POST['categorie'], $_SESSION['similaire'], $_POST['titre'], $_POST['description'], $_POST['location'], 1, 1, $_POST['datedeb'], $_POST['datefin'], 1, 1, $_POST['periodicite'], $_POST['occurences'], $_POST['priorite']);
-						$activite->add();
+						$act = new Activite(1, $_POST['agenda'], $_POST['categorie'], $_SESSION['similaire'], $_POST['titre'], $_POST['description'], $_POST['location'], '1', '1', $_POST['datedeb'], $_POST['datefin'], 1, 1, $_POST['periodicite'], $_POST['occurences'], $_POST['priorite']);
+						$act->add();
 
 						$_SESSION['message']['type'] = 'success';
 						$_SESSION['message']['text'] = "L'activité ".$_POST['titre']." a bien été créée.";
