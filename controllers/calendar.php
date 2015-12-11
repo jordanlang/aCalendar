@@ -29,21 +29,24 @@ class Controller_Calendar
 					$heures = array();
 					$jourSemaine = array();
 					$activites = array();
-					$activites = Activite::get_by_idUtilisateurAgendaDate($_SESSION['idUser'],$calendars[$num-1]->idAgenda(),$_SESSION['dateDebSemaineFr'],$_SESSION['$dateFinSemaineFr']);
-					for($m=0;$m<count($activites);$m++)
+					if(!empty($calendars)
 					{
-						for($l=0;$l<24;$l++)
+						$activites = Activite::get_by_idUtilisateurAgendaDate($_SESSION['idUser'],$calendars[$num-1]->idAgenda(),$_SESSION['dateDebSemaineFr'],$_SESSION['$dateFinSemaineFr']);
+						for($m=0;$m<count($activites);$m++)
 						{
-							for($k=0;$k<7;$k++)
+							for($l=0;$l<24;$l++)
 							{
+								for($k=0;$k<7;$k++)
+								{
 
-								if(date("H",$activites->dateDeb())== $l && date("d",$activites->dateDeb())==date("d",$_SESSION['dateDebSemaineFr'])+$k)
-									$jourSemaine[$k]=$activites[$m];
-								else {
-									$jourSemaine[$k]=NULL;
+									if(date("H",$activites->dateDeb())== $l && date("d",$activites->dateDeb())==date("d",$_SESSION['dateDebSemaineFr'])+$k)
+										$jourSemaine[$k]=$activites[$m];
+									else {
+										$jourSemaine[$k]=NULL;
+									}
 								}
+								$heures[$l]=$jourSemaine;
 							}
-							$heures[$l]=$jourSemaine;
 						}
 					}
 
