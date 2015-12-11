@@ -20,9 +20,7 @@ class Agenda extends Model_Base
 
 	private $_prive;
 
-	private $_partage;
-
-	public function __construct($idAgenda, $idUtilisateur, $nom, $description, $dateCreation, $dateUpdate, $intersection, $prive, $partage) {
+	public function __construct($idAgenda, $idUtilisateur, $nom, $description, $dateCreation, $dateUpdate, $intersection, $prive) {
 		$this->set_idAgenda($idAgenda);
 		$this->set_idUtilisateur($idUtilisateur);
 		$this->set_nom($nom);
@@ -31,7 +29,6 @@ class Agenda extends Model_Base
 		$this->set_dateUpdate($dateUpdate);
 		$this->set_intersection($intersection);
 		$this->set_prive($prive);
-		$this->set_partage($partage);
 	}
 
 	//get
@@ -68,10 +65,6 @@ class Agenda extends Model_Base
 		return $this->_prive;
 	}
 
-	public function partage() {
-		return $this->_partage;
-	}
-
 	//set
 
 	public function set_idAgenda($v) {
@@ -106,19 +99,14 @@ class Agenda extends Model_Base
 		$this->_prive = (int)($v);
 	}
 
-	public function set_partage($v) {
-		$this->_partage = (int)($v);
-	}
-
 	public function add() {
 		if(!is_null($this->_idAgenda)) {
-			$q = self::$_db->prepare('INSERT INTO AGENDA (idUtilisateur, nom, description, intersection, prive, partage) VALUES (:id, :nom, :description, :intersection, :prive, :partage)');
+			$q = self::$_db->prepare('INSERT INTO AGENDA (idUtilisateur, nom, description, intersection, prive) VALUES (:id, :nom, :description, :intersection, :prive)');
 			$q->bindValue(':id', $this->_idUtilisateur, PDO::PARAM_INT);
 			$q->bindValue(':nom', $this->_nom, PDO::PARAM_STR);
 			$q->bindValue(':description', $this->_description, PDO::PARAM_STR);
 			$q->bindValue(':intersection', $this->_intersection, PDO::PARAM_STR);
 			$q->bindValue(':prive', $this->_prive, PDO::PARAM_STR);
-			$q->bindValue(':partage', $this->_partage, PDO::PARAM_STR);
 			$q->execute();
 		}
 	}
@@ -126,13 +114,12 @@ class Agenda extends Model_Base
 	public function save()
 	{
 		if(!is_null($this->_idAgenda)) {
-			$q = self::$_db->prepare('UPDATE AGENDA SET nom=:nom, description=:description, dateUpdate=sysdate, intersection=:intersection, prive=:prive, partage=:partage WHERE idAgenda = :id');
+			$q = self::$_db->prepare('UPDATE AGENDA SET nom=:nom, description=:description, dateUpdate=sysdate, intersection=:intersection, prive=:prive WHERE idAgenda = :id');
 			$q->bindValue(':id', $this->_idAgenda, PDO::PARAM_INT);
 			$q->bindValue(':nom', $this->_nom, PDO::PARAM_STR);
 			$q->bindValue(':description', $this->_description, PDO::PARAM_STR);
 			$q->bindValue(':intersection', $this->_intersection, PDO::PARAM_STR);
 			$q->bindValue(':prive', $this->_prive, PDO::PARAM_STR);
-			$q->bindValue(':partage', $this->_partage, PDO::PARAM_STR);
 			$q->execute();
 		}
 	}
@@ -158,13 +145,12 @@ class Agenda extends Model_Base
 	}
 
 	public static function get_by_user_login($utilisateur) {
-		$s = self::$_db->prepare('SELECT a.idAgenda, a.idUtilisateur, a.nom, a.description, a.dateCreation, a.dateUpdate, a.intersection, a.prive, a.partage FROM AGENDA a, UTILISATEUR u where u.idUtilisateur = a.idUtilisateur AND u.pseudo = :utilisateur');
+		$s = self::$_db->prepare('SELECT a.idAgenda, a.idUtilisateur, a.nom, a.description, a.dateCreation, a.dateUpdate, a.intersection, a.prive FROM AGENDA a, UTILISATEUR u where u.idUtilisateur = a.idUtilisateur AND u.pseudo = :utilisateur');
 		$s->bindValue(':utilisateur', $utilisateur, PDO::PARAM_STR);
 		$s->execute();
 		$agendas = array();
 		while ($data = $s->fetch(PDO::FETCH_ASSOC)) {
-
-			$agendas[] = new Agenda($data['idAgenda'], $data['idUtilisateur'], $data['nom'], $data['description'], $data['dateCreation'], $data['dateUpdate'], $data['intersection'], $data['prive'], $data['partage']);
+			$agendas[] = new Agenda($data['idAgenda'], $data['idUtilisateur'], $data['nom'], $data['description'], $data['dateCreation'], $data['dateUpdate'], $data['intersection'], $data['prive']);
 		}
 		return $agendas;
 	}
@@ -175,7 +161,7 @@ class Agenda extends Model_Base
 		$s->execute();
 		$agendas = array();
 		while ($data = $s->fetch(PDO::FETCH_ASSOC)) {
-			$agendas[] = new Agenda($data['idAgenda'], $data['idUtilisateur'], $data['nom'], $data['description'], $data['dateCreation'], $data['dateUpdate'], $data['intersection'], $data['prive'], $data['partage']);
+			$agendas[] = new Agenda($data['idAgenda'], $data['idUtilisateur'], $data['nom'], $data['description'], $data['dateCreation'], $data['dateUpdate'], $data['intersection'], $data['prive']);
 		}
 		return $agendas;
 	}
@@ -186,7 +172,7 @@ class Agenda extends Model_Base
 		$s->execute();
 		$data = $s->fetch(PDO::FETCH_ASSOC);
 		if ($data) {
-			return new Agenda($data['idAgenda'], $data['idUtilisateur'], $data['nom'], $data['description'], $data['dateCreation'], $data['dateUpdate'], $data['intersection'], $data['prive'], $data['partage']);
+			return new Agenda($data['idAgenda'], $data['idUtilisateur'], $data['nom'], $data['description'], $data['dateCreation'], $data['dateUpdate'], $data['intersection'], $data['prive']);
 		} else {
 			return null;
 		}
