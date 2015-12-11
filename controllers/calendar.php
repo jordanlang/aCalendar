@@ -18,9 +18,9 @@ class Controller_Calendar
 				$_SESSION['jour'] = date("j");
 				$_SESSION['annee'] = date("y");
 
-				$_SESSION['dateDebSemaineFr'] = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+1,$_SESSION['annee']));
+				$dateDebSemaineFr = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+1,$_SESSION['annee']));
 				$datePrecise = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee']));
-				$_SESSION['$dateFinSemaineFr'] = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+7,$_SESSION['annee']));
+				$dateFinSemaineFr = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+7,$_SESSION['annee']));
 				//self::actualise_date_maintenant();
 				//si l'utilisateur est connecté on affiche la page de création d'une note
 				if(isset($_SESSION['user'])) {
@@ -32,7 +32,7 @@ class Controller_Calendar
 					$activites = array();
 					if(!empty($calendars))
 					{
-						$activites = Activite::get_by_idUtilisateurAgendaDate($_SESSION['idUser'],$calendars[$num-1]->idAgenda(),$_SESSION['dateDebSemaineFr'],$_SESSION['$dateFinSemaineFr']);
+						$activites = Activite::get_by_idUtilisateurAgendaDate($_SESSION['idUser'],$calendars[$num-1]->idAgenda(),$dateDebSemaineFr,$dateFinSemaineFr);
 						for($m=0;$m<count($activites);$m++)
 						{
 							for($l=0;$l<24;$l++)
@@ -127,16 +127,11 @@ class Controller_Calendar
 							$intersection = 0;
 						}
 						if(isset($_POST['prive'])) {
-							$prive = 1;
-						} else {
 							$prive = 0;
-						}
-						if(isset($_POST['partage'])) {
-							$partage = 1;
 						} else {
-							$partage = 0;
+							$prive = 1;
 						}
-						$n = new Agenda(1, $u->idUtilisateur(), $_POST['title'], $_POST['content'], '0', '0', $intersection, $prive, $partage);
+						$n = new Agenda(1, $u->idUtilisateur(), $_POST['title'], $_POST['content'], '0', '0', $intersection, $prive);
 						$n->add();
 						$_SESSION['message']['type'] = 'success';
 						$_SESSION['message']['text'] = "L'agenda ".$_POST['title']." a bien été créé.";
@@ -162,9 +157,10 @@ class Controller_Calendar
 			case 'GET' :
 				//si l'utilisateur est connecté on affiche la page de création d'une note
 				if(isset($_SESSION['user'])) {
-					$cat = Categorie::get_all_name();
+					$cat = Categorie::get_all();
 					$u = Utilisateur::get_by_login($_SESSION['user']);
-					$agendas = Agenda::get_by_user_name($u->idUtilisateur());
+					$agendas = Agenda::get_by_user($u->idUtilisateur());
+					echo count($agendas);
 					include 'views/createActivite.php';
 				}
 				else {
@@ -177,27 +173,14 @@ class Controller_Calendar
 			case 'POST' :
 				if(isset($_SESSION['user'])) {
 					$u = Utilisateur::get_by_login($_SESSION['user']);
+					if(!empty($_POST['titre']) && !empty($_POST['description']) && !empty($_POST['location']) && isset($_POST['datedeb']) && isset($_POST['datefin']) && !empty($_POST['occurences'])) {
+						
+						//TODO
+						$activite = new Activite(1, $_POST['agenda'], $_POST['categorie'], $_SESSION['similaire'], $_POST['titre'], $_POST['description'], $_POST['location'], 1, 1, $_POST['datedeb'], $_POST['datefin'], 1, 1, $_POST['periodicite'], $_POST['occurences'], $_POST['priorite']);
+						$activite->add();
 
-					if(isset($_POST['title']) && isset($_POST['content'])) {
-						if(isset($_POST['intersection'])) {
-							$intersection = 1;
-						} else {
-							$intersection = 0;
-						}
-						if(isset($_POST['prive'])) {
-							$prive = 1;
-						} else {
-							$prive = 0;
-						}
-						if(isset($_POST['partage'])) {
-							$partage = 1;
-						} else {
-							$partage = 0;
-						}
-						$n = new Agenda(1, $u->idUtilisateur(), $_POST['title'], $_POST['content'], '0', '0', $intersection, $prive, $partage);
-						$n->add();
 						$_SESSION['message']['type'] = 'success';
-						$_SESSION['message']['text'] = "L'agenda ".$_POST['title']." a bien été créé.";
+						$_SESSION['message']['text'] = "L'activité ".$_POST['titre']." a bien été créée.";
 						$this->show_calendar();
 					}
 					else {

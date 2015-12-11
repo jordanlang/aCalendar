@@ -14,9 +14,6 @@
 	<br>
 	<input type="checkbox" name="prive" value="">
 	<label for="prive">Calendrier public</label>
-	<br>
-	<input type="checkbox" name="partage" value="">
-	<label for="partage">Calendrier en partage</label>
 	
 	<div class="formline">
 		<input type="submit" value="Create">

@@ -85,13 +85,13 @@ class Categorie extends Model_Base
 		}
 	}
 
-	public static function get_all_name() {
+	public static function get_all() {
 		$s = self::$_db->prepare('SELECT * FROM CATEGORIE');
 		$s->execute();
 		$data = $s->fetch(PDO::FETCH_ASSOC);
 		$categories = array();
 		while ($data = $s->fetch(PDO::FETCH_ASSOC)) {
-			$categories[] = $data['nom'];
+			$categories[] = new Categorie($data['idCategorie'], $data['nom'], $data['descriptif']);
 		}
 		return $categories;
 	}

@@ -1,3 +1,8 @@
+<?php 
+	require_once 'models/agenda.php';
+	require_once 'models/categorie.php';
+?>
+
 <h2 class="text-center">Création d'une nouvelle activité</h2>
 
 <form method="post" action="<?=BASEURL?>/index.php/calendar/add_calendar">
@@ -6,7 +11,7 @@
 		<label for="agenda">Calendrier</label>
 		<select name="agenda" id="agenda">
 		<?php for($j=0; $j<count($agendas); $j++) { ?>
-			<option value="cal<?=$j?>"><?=$agendas[$j]?></option>
+			<option value="<?=$agendas[$j]->idAgenda()?>"><?=$agendas[$j]->nom()?></option>
 		<?php } ?>
 		</select>
 	</div>
@@ -22,9 +27,9 @@
 	<div class="formline">
 	<label for="categorie">Catégorie</label>
 	<select name="categorie" id="categorie">
-		<option value="cat0"></option>
+		<option value="0"></option>
 	<?php for($j=1; $j<=count($cat); $j++) { ?>
-		<option value="cat<?=$j?>"><?=$cat[$j-1]?></option>
+		<option value="<?=$cat[$j-1]->idCategorie()?>"><?=$cat[$j-1]->nom()?></option>
 	<?php } ?>
 	</select>
 	</div>
@@ -57,9 +62,8 @@
 	<div class="formline">
 	<label for="priorite">Priorité</label>
 	<select name="priorite" id="priorite">
-		<option value="priorite0"></option>
 	<?php for($j=1; $j<=10; $j++) { ?>
-		<option value="priorite<?=$j?>"><?=$j?></option>
+		<option value="<?=$j?>"><?=$j?></option>
 	<?php } ?>
 	</select>
 	</div>
