@@ -1,4 +1,5 @@
-<h2 class="text-center">Sign in</h2>
+<div class="create">
+	<h2 class="text-center">Sign in</h2>
 
 <form method="post" action="<?=BASEURL?>/index.php/user/signin">
 	<div class="formline">
@@ -16,3 +17,4 @@
 
 <p>No account yet ? -> <a href="<?=BASEURL?>/index.php/user/signup">Sign up !</a><p>
 <p>Or connect with -> <a href="<?=BASEURL?>/Connexion/index.php?logon=">CAS</a><p>
+</div>

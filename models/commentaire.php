@@ -109,8 +109,19 @@ class Commentaire extends Model_Base
 	}
 
 	public static function get_by_activite($idActivite) {
-		$s = self::$_db->prepare('SELECT * FROM COMMENTAIRE where idActivite = :id');
+		$s = self::$_db->prepare('SELECT * FROM COMMENTAIRE where idActivite = :id AND idParent=NULL');
 		$s->bindValue(':id', $idActivite, PDO::PARAM_INT);
+		$s->execute();
+		$activites = array();
+		while ($data = $s->fetch(PDO::FETCH_ASSOC)) {
+			$activites[] = new Commentaire($data['idComm'], $data['idParent'], $data['idUtilisateur'], $data['idActivite'], $data['dateComm'], $data['commentaire']);
+		}
+		return $activites;
+	}
+
+	public static function get_childs($idComm) {
+		$s = self::$_db->prepare('SELECT * FROM COMMENTAIRE where idParent=:id');
+		$s->bindValue(':id', $idComm, PDO::PARAM_INT);
 		$s->execute();
 		$activites = array();
 		while ($data = $s->fetch(PDO::FETCH_ASSOC)) {
