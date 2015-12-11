@@ -1,13 +1,12 @@
 create table UTILISATEUR
 (
-	idUtilisateur INT(8) AUTO_INCREMENT,
+	idUtilisateur INT(8) PRIMARY KEY AUTO_INCREMENT,
 	nom varchar(30),
 	prenom varchar(30),
 	adresse varchar(50),
 	pseudo varchar(30) UNIQUE,
 	mdp varchar(50),
 	email varchar(40) UNIQUE,
-	PRIMARY KEY (idUtilisateur),
 	dateInscription TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -21,7 +20,6 @@ create table AGENDA
 	dateUpdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	intersection INT(1),
 	prive INT(1),
-	partage INT(1),
 	FOREIGN KEY (idUtilisateur) REFERENCES UTILISATEUR(idUtilisateur) ON DELETE SET NULL
 );
 

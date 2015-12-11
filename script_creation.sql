@@ -20,7 +20,6 @@ create table AGENDA
 	dateUpdate date DEFAULT sysdate,
 	intersection number(1),
 	prive number(1),
-	partage number(1),
 	FOREIGN KEY (idUtilisateur) REFERENCES UTILISATEUR ON DELETE SET NULL
 );
 
