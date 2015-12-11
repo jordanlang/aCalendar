@@ -120,7 +120,7 @@ class Utilisateur extends Model_Base
 			$q->bindValue(':nom', $this->_nom, PDO::PARAM_STR);
 			$q->bindValue(':prenom', $this->_prenom, PDO::PARAM_STR);
 			$q->bindValue(':adresse', $this->_adresse, PDO::PARAM_STR);
-			
+
 			$q->bindValue(':pseudo', $this->_pseudo, PDO::PARAM_STR);
 			$q->bindValue(':mdp', $this->_mdp, PDO::PARAM_STR);
 			$q->bindValue(':email', $this->_email, PDO::PARAM_STR);
