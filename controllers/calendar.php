@@ -7,6 +7,7 @@ require_once 'models/utilisateur.php';
 
 class Controller_Calendar
 {
+
 	public function show_calendar() {
 		switch ($_SERVER['REQUEST_METHOD']) {
 			case 'GET' :
@@ -29,7 +30,7 @@ class Controller_Calendar
 					$heures = array();
 					$jourSemaine = array();
 					$activites = array();
-					if(!empty($calendars)
+					if(!empty($calendars))
 					{
 						$activites = Activite::get_by_idUtilisateurAgendaDate($_SESSION['idUser'],$calendars[$num-1]->idAgenda(),$_SESSION['dateDebSemaineFr'],$_SESSION['$dateFinSemaineFr']);
 						for($m=0;$m<count($activites);$m++)
@@ -50,8 +51,6 @@ class Controller_Calendar
 						}
 					}
 
-
-					echo count($calendars);
 					include 'views/calendar.php';
 				}
 				else {
@@ -241,6 +240,34 @@ class Controller_Calendar
 					$dateDebSemaineFr = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+1,$_SESSION['annee']));
 					$datePrecise = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee']));
 					$dateFinSemaineFr = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+7,$_SESSION['annee']));
+
+					$num=1;
+					$calendars = array();
+					$calendars=Agenda::get_by_user_login($_SESSION['user']);
+					$heures = array();
+					$jourSemaine = array();
+					$activites = array();
+					if(!empty($calendars))
+					{
+						$activites = Activite::get_by_idUtilisateurAgendaDate($_SESSION['idUser'],$calendars[$num-1]->idAgenda(),$_SESSION['dateDebSemaineFr'],$_SESSION['$dateFinSemaineFr']);
+						for($m=0;$m<count($activites);$m++)
+						{
+							for($l=0;$l<24;$l++)
+							{
+								for($k=0;$k<7;$k++)
+								{
+
+									if(date("H",$activites->dateDeb())== $l && date("d",$activites->dateDeb())==date("d",$_SESSION['dateDebSemaineFr'])+$k)
+										$jourSemaine[$k]=$activites[$m];
+									else {
+										$jourSemaine[$k]=NULL;
+									}
+								}
+								$heures[$l]=$jourSemaine;
+							}
+						}
+					}
+					
 					include 'views/calendar.php';
 				}
 				else {
@@ -289,6 +316,33 @@ class Controller_Calendar
 					$datePrecise = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee']));
 					$dateFinSemaineFr = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+7,$_SESSION['annee']));
 
+					$num=1;
+					$calendars = array();
+					$calendars=Agenda::get_by_user_login($_SESSION['user']);
+					$heures = array();
+					$jourSemaine = array();
+					$activites = array();
+					if(!empty($calendars))
+					{
+						$activites = Activite::get_by_idUtilisateurAgendaDate($_SESSION['idUser'],$calendars[$num-1]->idAgenda(),$_SESSION['dateDebSemaineFr'],$_SESSION['$dateFinSemaineFr']);
+						for($m=0;$m<count($activites);$m++)
+						{
+							for($l=0;$l<24;$l++)
+							{
+								for($k=0;$k<7;$k++)
+								{
+
+									if(date("H",$activites->dateDeb())== $l && date("d",$activites->dateDeb())==date("d",$_SESSION['dateDebSemaineFr'])+$k)
+										$jourSemaine[$k]=$activites[$m];
+									else {
+										$jourSemaine[$k]=NULL;
+									}
+								}
+								$heures[$l]=$jourSemaine;
+							}
+						}
+					}
+
 					include 'views/calendar.php';
 				}
 				else {
@@ -326,6 +380,32 @@ class Controller_Calendar
 					$datePrecise = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee']));
 					$_SESSION['$dateFinSemaineFr'] = date("d/m/Y", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+7,$_SESSION['annee']));
 
+					$num=1;
+					$calendars = array();
+					$calendars=Agenda::get_by_user_login($_SESSION['user']);
+					$heures = array();
+					$jourSemaine = array();
+					$activites = array();
+					if(!empty($calendars))
+					{
+						$activites = Activite::get_by_idUtilisateurAgendaDate($_SESSION['idUser'],$calendars[$num-1]->idAgenda(),$_SESSION['dateDebSemaineFr'],$_SESSION['$dateFinSemaineFr']);
+						for($m=0;$m<count($activites);$m++)
+						{
+							for($l=0;$l<24;$l++)
+							{
+								for($k=0;$k<7;$k++)
+								{
+
+									if(date("H",$activites->dateDeb())== $l && date("d",$activites->dateDeb())==date("d",$_SESSION['dateDebSemaineFr'])+$k)
+										$jourSemaine[$k]=$activites[$m];
+									else {
+										$jourSemaine[$k]=NULL;
+									}
+								}
+								$heures[$l]=$jourSemaine;
+							}
+						}
+					}
 					include 'views/calendar.php';
 				}
 				else {
