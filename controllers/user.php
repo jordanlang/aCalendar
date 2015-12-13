@@ -1,15 +1,5 @@
 <?php
 
-/**
-* \file      controllers/user.php
-* \author    Jérémy Spieldenner
-* \version   1.0
-* \date      20 Octobre 2014
-* \brief     Contrôle la correction
-*
-* \details   Cette classe permet la création d'un utilisateur de part son inscription, et gère également sa connexion ainsi que sa déconnexion.
-*/
-
 require_once 'models/utilisateur.php';
 
 class Controller_User
@@ -39,6 +29,7 @@ class Controller_User
 						{
 							$_SESSION['user'] = $u->pseudo();
 							$_SESSION['idUser'] = $u->idUtilisateur();
+							$_SESSION['admin']=$u->admin();
 							show_message('message_success',"Vous êtes connecté");
 							include 'views/home.php';
 						}
@@ -81,23 +72,7 @@ class Controller_User
 					if (!$exist) {
 						if($_POST['pw'] == $_POST['pwConfirm']) {
 							//Fonction sha1 permet crypté le mot de passe
-							$u = new Utilisateur(1, NULL, NULL, NULL, htmlspecialchars($_POST['login']), sha1($_POST['pw']), NULL, NULL);
-							/*$_POST['nom'] = "Jordan";
-							$_POST['prenom'] = "Coucou";
-							$_POST['adresse'] = "sgifren";
-							$_POST['email'] = "hcueiuc";*/
-							if(isset($_POST['nom'])) {
-								$u->set_nom(htmlspecialchars($_POST['nom']));
-							}
-							if(isset($_POST['prenom'])) {
-								$u->set_prenom(htmlspecialchars($_POST['prenom']));
-							}
-							if(isset($_POST['adresse'])) {
-								$u->set_adresse(htmlspecialchars($_POST['adresse']));
-							}
-							if(isset($_POST['email'])) {
-								$u->set_email(htmlspecialchars($_POST['email']));
-							}
+							$u = new Utilisateur(1, NULL, NULL, NULL, htmlspecialchars($_POST['login']), sha1($_POST['pw']), NULL, NULL,0);
 							$u->add();
 							show_message('message_success',"Inscription de ".$_POST['login'].' !');
 							include 'views/home.php';
@@ -127,113 +102,12 @@ class Controller_User
 		unset($_SESSION['user']);
 		header('Location: '.BASEURL.'/index.php');
 	}
-}
-/*
-require_once 'models/utilisateur.php';
 
-class Controller_User
-{
-	public function signin() {
-		switch ($_SERVER['REQUEST_METHOD']) {
-			case 'GET' :
-				//si l'utilisateur n'est pas connecté on affiche la page de connexion
-				if (isset($_SESSION['user'])) {
-					$_SESSION['message']['type'] = 'error';
-					$_SESSION['message']['text'] = 'You are already connected as '.$_SESSION['user'];
-				} else {
-					include 'views/connexion.php';
-				}
-				break;
-
-			case 'POST' :
-				if (isset($_POST['login']) && isset($_POST['pw'])) {
-					if(User::exist($_POST['login'])) {
-						$u = User::get_by_login($_POST['login']);
-						//pour savoir que l'utilisateur est connecté, on fait en sorte que isset($_SESSION['user']) retourne true
-						if (!is_null($u)) {
-							if($u->password() == $_POST['pw']) {
-								$_SESSION['user'] = $u->login();
-								$_SESSION['message']['type'] = 'success';
-								$_SESSION['message']['text'] = 'User '.$_SESSION['user'].' successfully signed in';
-								include 'views/home.php';
-							}
-							else {
-								$_SESSION['message']['type'] = 'error';
-								$_SESSION['message']['text'] = 'Wrong login or password';
-								include 'views/connexion.php';
-							}
-						}
-					}
-					else {
-						$_SESSION['message']['type'] = 'error';
-						$_SESSION['message']['text'] = 'Wrong login or password';
-						include 'views/connexion.php';
-					}
-				} else {
-					$_SESSION['message']['type'] = 'error';
-					$_SESSION['message']['text'] = 'Posted data incomplete';
-					include 'views/connexion.php';
-				}
-				break;
-		}
-	}
-
-	public function signup() {
+	public function change_user() {
 		switch ($_SERVER['REQUEST_METHOD']) {
 			case 'GET' :
 				if (isset($_SESSION['user'])) {
-					$_SESSION['message']['type'] = 'error';
-					$_SESSION['message']['text'] = 'You are already connected as '.$_SESSION['user'];
-					include 'views/home.php';
-				} else {
-					include 'views/inscription.php';
-				}
-				break;
-
-			case 'POST' :
-				if (isset($_POST['login']) && isset($_POST['pw']) && isset($_POST['pwConfirm'])) {
-					if(User::exist($_POST['login'])) {
-						$_SESSION['message']['type'] = 'error';
-						$_SESSION['message']['text'] = 'Login already exists';
-						include 'views/inscription.php';
-					}
-					else {
-						//on compare les mots de passe pour valider l'inscription
-						if($_POST['pw'] == $_POST['pwConfirm']) {
-							$u = new User(1, $_POST['login'], $_POST['pw']);
-							$u->add();
-							$_SESSION['user'] = $_POST['login'];
-							$_SESSION['message']['type'] = 'success';
-							$_SESSION['message']['text'] = 'User '.$_SESSION['user'].' successfully signed up';
-							include 'views/home.php';
-						}
-						else {
-							$_SESSION['message']['type'] = 'error';
-							$_SESSION['message']['text'] = 'Passwords do not match';
-							include 'views/inscription.php';
-						}
-					}
-				} else {
-					$_SESSION['message']['type'] = 'error';
-					$_SESSION['message']['text'] = 'Posted data incomplete';
-					include 'views/inscription.php';
-				}
-				break;
-		}
-	}
-
-	public function signout() {
-		unset($_SESSION['user']);
-		include 'views/home.php';
-	}
-
-	public function profil() {
-		switch ($_SERVER['REQUEST_METHOD']) {
-			case 'GET' :
-				if (isset($_SESSION['user'])) {
-					$u = User::get_by_login($_SESSION['user']);
-					$login = $u->login();
-					$password = $u->password();
+					$u = Utilisateur::get_by_login($_SESSION['user']);
 					include 'views/profil.php';
 				} else {
 					$_SESSION['message']['type'] = 'error';
@@ -243,27 +117,78 @@ class Controller_User
 				break;
 
 			case 'POST' :
-				$u = User::get_by_login($_SESSION['user']);
+				$u = Utilisateur::get_by_login($_SESSION['user']);
 				if (!is_null($u)) {
-					if($u->password() == $_POST['pwA']) {
-						if (isset($_POST['login'])) {
-							$u->set_login($_POST['login']);
+					if($u->mdp() == sha1($_POST['mdp'])) {
+						if(isset($_POST['nom'])) {
+							$u->set_nom(htmlspecialchars($_POST['nom']));
 						}
-						if(isset($_POST['pwN'])) {
-							$u->set_password($_POST['pwN']);
+						else {
+							$u->set_nom(htmlspecialchars(" "));
+						}
+						if(isset($_POST['prenom'])) {
+							$u->set_prenom(htmlspecialchars($_POST['prenom']));
+						}
+						else {
+							$u->set_prenom(htmlspecialchars(" "));
+						}
+						if(isset($_POST['adresse'])) {
+							$u->set_adresse(htmlspecialchars($_POST['adresse']));
+						}
+						else {
+							$u->set_adresse(htmlspecialchars(" "));
+						}
+						if(isset($_POST['email'])) {
+							$u->set_email(htmlspecialchars($_POST['email']));
+						}
+						else {
+							$u->set_email(htmlspecialchars(" "));
 						}
 						$u->save();
-						session_destroy();
+						show_message('message_success',"Votre compte à été modifié !");
+						include 'views/home.php';
 					}
 					else {
 						$_SESSION['message']['type'] = 'error';
 						$_SESSION['message']['text'] = 'Wrong password';
+						include 'views/profil.php';
 					}
 				}
-				$login = $u->login();
-				$password = $u->password();
-				include 'views/profil.php';
+
 				break;
 		}
 	}
-}*/
+
+	public function supprimer($id) {
+
+    if(isset($_SESSION['user'])) {
+			$_SESSION['message']['type'] = 'success';
+      $_SESSION['message']['text'] = "Utilisateur supprimé";
+			$u=Utilisateur::get_by_id($id);
+      $u->supprimer();
+      include 'views/home.php';
+    }
+    else {
+      $_SESSION['message']['type'] = 'error';
+      $_SESSION['message']['text'] = "You aren't connected";
+      include 'views/connexion.php';
+    }
+  }
+
+	public function admin($id) {
+
+    if(isset($_SESSION['user'])) {
+			$u=Utilisateur::get_by_id($id);
+			$_SESSION['message']['type'] = 'success';
+      $_SESSION['message']['text'] = "Droit donné à ".$u->pseudo();
+
+      $u->be_admin();
+      include 'views/home.php';
+    }
+    else {
+      $_SESSION['message']['type'] = 'error';
+      $_SESSION['message']['text'] = "You aren't connected";
+      include 'views/connexion.php';
+    }
+  }
+}

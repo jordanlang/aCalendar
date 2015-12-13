@@ -20,7 +20,9 @@ class Utilisateur extends Model_Base
 
 	private $_dateInscription;
 
-	public function __construct($idUtilisateur, $nom, $prenom, $adresse, $pseudo, $mdp, $email, $dateInscription) {
+	private $_admin;
+
+	public function __construct($idUtilisateur, $nom, $prenom, $adresse, $pseudo, $mdp, $email, $dateInscription,$admin) {
 		$this->set_idUtilisateur($idUtilisateur);
 		$this->set_nom($nom);
 		$this->set_prenom($prenom);
@@ -29,6 +31,7 @@ class Utilisateur extends Model_Base
 		$this->set_mdp($mdp);
 		$this->set_email($email);
 		$this->set_dateInscription($dateInscription);
+		$this->set_admin($admin);
 	}
 
 	//get
@@ -65,6 +68,10 @@ class Utilisateur extends Model_Base
 		return $this->_dateInscription;
 	}
 
+	public function admin() {
+		return $this->_admin;
+	}
+
 	//set
 
 	public function set_idUtilisateur($v) {
@@ -98,16 +105,15 @@ class Utilisateur extends Model_Base
 	public function set_dateInscription($v) {
 		$this->_dateInscription = strval($v);
 	}
+	public function set_admin($v) {
+		$this->_admin = (int)($v);
+	}
 
 	public function add() {
 		if(!is_null($this->_idUtilisateur)) {
-			$q = self::$_db->prepare('INSERT INTO UTILISATEUR (nom, prenom, adresse, pseudo, mdp, email) VALUES (:nom, :prenom, :adresse, :pseudo, :mdp, :email)');
-			$q->bindValue(':nom', $this->_nom, PDO::PARAM_STR);
-			$q->bindValue(':prenom', $this->_prenom, PDO::PARAM_STR);
-			$q->bindValue(':adresse', $this->_adresse, PDO::PARAM_STR);
+			$q = self::$_db->prepare('INSERT INTO UTILISATEUR (nom, prenom, adresse, pseudo, mdp, email,admin) VALUES (NULL, NULL, NULL, :pseudo, :mdp, NULL,0)');
 			$q->bindValue(':pseudo', $this->_pseudo, PDO::PARAM_STR);
 			$q->bindValue(':mdp', $this->_mdp, PDO::PARAM_STR);
-			$q->bindValue(':email', $this->_email, PDO::PARAM_STR);
 			$q->execute();
 		}
 	}
@@ -115,26 +121,16 @@ class Utilisateur extends Model_Base
 	public function save()
 	{
 		if(!is_null($this->_idUtilisateur)) {
-			$q = self::$_db->prepare('UPDATE UTILISATEUR SET nom=:nom, prenom=:prenom, adresse=:adresse, pseudo=:pseudo, mdp=:mdp, email=:email WHERE idUtilisateur = :id');
+			$q = self::$_db->prepare('UPDATE UTILISATEUR SET nom=:nom, prenom=:prenom, adresse=:adresse, pseudo=:pseudo, mdp=:mdp, email=:email, admin=:admin WHERE idUtilisateur = :id');
 			$q->bindValue(':id', $this->_idUtilisateur, PDO::PARAM_INT);
 			$q->bindValue(':nom', $this->_nom, PDO::PARAM_STR);
 			$q->bindValue(':prenom', $this->_prenom, PDO::PARAM_STR);
 			$q->bindValue(':adresse', $this->_adresse, PDO::PARAM_STR);
-
 			$q->bindValue(':pseudo', $this->_pseudo, PDO::PARAM_STR);
 			$q->bindValue(':mdp', $this->_mdp, PDO::PARAM_STR);
 			$q->bindValue(':email', $this->_email, PDO::PARAM_STR);
+			$q->bindValue(':admin', $this->_email, PDO::PARAM_INT);
 			$q->execute();
-		}
-	}
-
-	public function delete()
-	{
-		if(!is_null($this->_idUtilisateur)) {
-			$q = self::$_db->prepare('DELETE FROM UTILISATEUR WHERE idUtilisateur = :id');
-			$q->bindValue(':id', $this->_idUtilisateur, PDO::PARAM_INT);
-			$q->execute();
-			$this->_idUtilisateur = null;
 		}
 	}
 
@@ -144,10 +140,21 @@ class Utilisateur extends Model_Base
 		$s->execute();
 		$data = $s->fetch(PDO::FETCH_ASSOC);
 		if ($data) {
-			return new Utilisateur($data['idUtilisateur'], $data['nom'], $data['prenom'], $data['adresse'], $data['pseudo'], $data['mdp'], $data['email'], $data['dateInscription']);
+			return new Utilisateur($data['idUtilisateur'], $data['nom'], $data['prenom'], $data['adresse'], $data['pseudo'], $data['mdp'], $data['email'], $data['dateInscription'],$data['admin']);
 		} else {
 			return null;
 		}
+	}
+
+	public static function get_all() {
+		$s = self::$_db->prepare('SELECT * FROM UTILISATEUR');
+		$s->execute();
+		$u = array();
+		while ($data = $s->fetch(PDO::FETCH_ASSOC)) {
+			$u[] = new Utilisateur($data['idUtilisateur'], $data['nom'], $data['prenom'], $data['adresse'], $data['pseudo'], $data['mdp'], $data['email'], $data['dateInscription'],$data['admin']);
+		}
+		return $u;
+
 	}
 
 	public static function get_by_id($idUtilisateur) {
@@ -156,10 +163,22 @@ class Utilisateur extends Model_Base
 		$s->execute();
 		$data = $s->fetch(PDO::FETCH_ASSOC);
 		if ($data) {
-			return new Utilisateur($data['idUtilisateur'], $data['nom'], $data['prenom'], $data['adresse'], $data['pseudo'], $data['mdp'], $data['email'], $data['dateInscription']);
+			return new Utilisateur($data['idUtilisateur'], $data['nom'], $data['prenom'], $data['adresse'], $data['pseudo'], $data['mdp'], $data['email'], $data['dateInscription'],$data['admin']);
 		} else {
 			return null;
 		}
+	}
+
+	public function supprimer() {
+		$s = self::$_db->prepare('DELETE FROM UTILISATEUR where idUtilisateur = :id');
+		$s->bindValue(':id', $this->_idUtilisateur, PDO::PARAM_INT);
+		$s->execute();
+	}
+
+	public function be_admin() {
+		$s = self::$_db->prepare('UPDATE INTO UTILISATEUR SET admin=1 WHERE idUtilisateur= :id');
+		$s->bindValue(':id', $this->_idUtilisateur, PDO::PARAM_INT);
+		$s->execute();
 	}
 
 	public static function exist($pseudo) {

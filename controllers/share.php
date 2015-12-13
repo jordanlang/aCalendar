@@ -32,7 +32,7 @@ class Controller_Share
 					include 'views/connexion.php';
 				}
 				break;
-		}	
+		}
 	}
 
 	public function search() {
@@ -56,6 +56,11 @@ class Controller_Share
 					if(Utilisateur::exist($_POST['recherche']) && $_SESSION['user'] != $_POST['recherche']) {
 						$agendas = Agenda::get_by_user_public($u->idUtilisateur());
 					}
+					if(count($agendas)==0)
+					{
+						$_SESSION['message']['type'] = 'error';
+						$_SESSION['message']['text'] = "Il n'y a pas d'agenda";
+					}
 					include 'views/share.php';
 				}
 				else {
@@ -64,7 +69,77 @@ class Controller_Share
 					include 'views/connexion.php';
 				}
 				break;
-		}	
+		}
+	}
+
+	public function search_by_name() {
+		switch ($_SERVER['REQUEST_METHOD']) {
+			case 'GET' :
+				//si l'utilisateur est connecté on affiche la page de création d'une note
+				if(isset($_SESSION['user'])) {
+					include 'views/share.php';
+				}
+				else {
+					$_SESSION['message']['type'] = 'error';
+					$_SESSION['message']['text'] = "You aren't connected";
+					include 'views/connexion.php';
+				}
+				break;
+
+			case 'POST' :
+				if(isset($_SESSION['user'])) {
+					$moi = Utilisateur::get_by_login($_SESSION['user']);
+					$agendas = Agenda::get_by_name_public($_POST['nom']);
+
+					if(count($agendas)==0)
+					{
+						$_SESSION['message']['type'] = 'error';
+						$_SESSION['message']['text'] = "Il n'y a pas d'agenda";
+					}
+					include 'views/share.php';
+				}
+				else {
+					$_SESSION['message']['type'] = 'error';
+					$_SESSION['message']['text'] = "You aren't connected";
+					include 'views/connexion.php';
+				}
+				break;
+		}
+	}
+
+	public function search_by_desc() {
+		switch ($_SERVER['REQUEST_METHOD']) {
+			case 'GET' :
+				//si l'utilisateur est connecté on affiche la page de création d'une note
+				if(isset($_SESSION['user'])) {
+					include 'views/share.php';
+				}
+				else {
+					$_SESSION['message']['type'] = 'error';
+					$_SESSION['message']['text'] = "You aren't connected";
+					include 'views/connexion.php';
+				}
+				break;
+
+			case 'POST' :
+				if(isset($_SESSION['user'])) {
+					$agendas = Agenda::get_by_desc_public($_POST['desc']);
+					$moi = Utilisateur::get_by_login($_SESSION['user']);
+
+					if(count($agendas)==0)
+					{
+						$_SESSION['message']['type'] = 'error';
+						$_SESSION['message']['text'] = "Il n'y a pas d'agenda";
+					}
+					include 'views/share.php';
+				}
+				else {
+					$_SESSION['message']['type'] = 'error';
+					$_SESSION['message']['text'] = "You aren't connected";
+					include 'views/connexion.php';
+				}
+				break;
+		}
 	}
 
 	public function abonnement($idAgenda, $nomAgenda) {
@@ -96,7 +171,7 @@ class Controller_Share
 					include 'views/connexion.php';
 				}
 				break;
-		}	
+		}
 	}
 
 	public function desabonnement($idAgenda, $nomAgenda) {
@@ -117,8 +192,6 @@ class Controller_Share
 				if(isset($_SESSION['user'])) {
 					$user = Utilisateur::get_by_login($_SESSION['user']);
 					if(Abonnement::exist($user->idUtilisateur(), $idAgenda)) {
-						echo $user->idUtilisateur();
-						echo $idAgenda;
 						$abo = Abonnement::delete($user->idUtilisateur(), $idAgenda);
 
 						$_SESSION['message']['type'] = 'success';
@@ -135,7 +208,6 @@ class Controller_Share
 					include 'views/connexion.php';
 				}
 				break;
-		}	
+		}
 	}
 }
-

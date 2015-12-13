@@ -130,6 +130,16 @@ class Commentaire extends Model_Base
 		return $activites;
 	}
 
+	public static function get_all() {
+		$s = self::$_db->prepare('SELECT * FROM COMMENTAIRE');
+		$s->execute();
+		$activites = array();
+		while ($data = $s->fetch(PDO::FETCH_ASSOC)) {
+			$activites[] = new Commentaire($data['idComm'], $data['idParent'], $data['idUtilisateur'], $data['idActivite'], $data['dateComm'], $data['commentaire']);
+		}
+		return $activites;
+	}
+
 	public static function get_by_id($idComm) {
 		$s = self::$_db->prepare('SELECT * FROM COMMENTAIRE where idComm= :id');
 		$s->bindValue(':id', $idComm, PDO::PARAM_INT);
@@ -140,5 +150,18 @@ class Commentaire extends Model_Base
 		} else {
 			return null;
 		}
+	}
+
+	public function supprimer() {
+		$s = self::$_db->prepare('DELETE FROM COMMENTAIRE where idCommentaire = :id');
+		$s->bindValue(':id', $this->_idComm, PDO::PARAM_INT);
+		$s->execute();
+	}
+
+	public function editer($descr) {
+		$s = self::$_db->prepare('UPDATE INTO COMMENTAIRE SET description=:descr WHERE idCommentaire= :id');
+		$s->bindValue(':id', $this->_idUtilisateur, PDO::PARAM_INT);
+		$s->bindValue(':descr', $descr, PDO::PARAM_STR);
+		$s->execute();
 	}
 }

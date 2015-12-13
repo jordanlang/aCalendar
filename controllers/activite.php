@@ -44,7 +44,6 @@ class Controller_Activite
 					$_SESSION['message']['text'] = "You aren't connected";
 					include 'views/connexion.php';
 				}
-
   }
 
   public static function doCommentaire($idActivite,$idParent)

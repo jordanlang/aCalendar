@@ -1,16 +1,35 @@
 <li>
 	<div class="myCal">
 		<a href="<?=BASEURL?>/index.php/calendar/add_calendar/">+</a>
-		<?php for($j=0; $j<count($all_agendas); $j++) {
-			if($j==$_SESSION['$num'])
+		<?php if(count($mes_agendas)>0)
+		{?>
+			<p> Mes Agendas </p>
+		<?php
+		}
+		for($j=0; $j<count($mes_agendas); $j++) {
+			if($j==$_SESSION['num'])
 			{?>
-					<a  class="but" style="color: #C8F0C8;" id="<?=$j?>"><?php echo $all_agendas[$j]->nom();?></a>
+					<a  class="but" style="color: #C8F0C8; font-size: 2rem; " id="<?=$j?>"><?php echo $mes_agendas[$j]->nom();?></a>
 				<?php }else {?>
-					<a  class="but" id="<?=$j?>"><?php echo $all_agendas[$j]->nom();?></a>
+					<a  class="but" style="font-size: 2rem;" id="<?=$j?>"><?php echo $mes_agendas[$j]->nom();?></a>
 			<?php } ?>
 			<div class="propos" style="display: none;">
-				<a href="<?=BASEURL?>/index.php/calendar/add_activite/<?=$j?>">Editer</a>
-				<a href="<?=BASEURL?>/index.php/calendar/show_other_calendar/<?=$j?>">Voir</a>
+				<a style="font-size: 1.5rem;" href="<?=BASEURL?>/index.php/calendar/add_activite/<?=$j?>">Editer</a>
+				<a style="font-size: 1.5rem;"href="<?=BASEURL?>/index.php/calendar/show_other_calendar/<?=$j?>">Voir</a>
+			</div>
+		<?php } if(count($abonnements)>0)
+		{?>
+			<p> Mes abonnements </p>
+		<?php }
+		for($j=0; $j<count($abonnements); $j++) {
+			if($j+count($mes_agendas)==$_SESSION['num'])
+			{?>
+					<a  class="but" style="color: #C8F0C8; font-size: 2rem; " id="<?=$j+count($mes_agendas)?>"><?php echo $abonnements[$j]->nom();?></a>
+				<?php }else {?>
+					<a  class="but" style="font-size: 2rem;" id="<?=$j+count($mes_agendas)?>"><?php echo $abonnements[$j]->nom();?></a>
+			<?php } ?>
+			<div class="propos" style="display: none;">
+				<a style="font-size: 1.5rem;"href="<?=BASEURL?>/index.php/calendar/show_other_calendar/<?=$j+count($mes_agendas)?>">Voir</a>
 			</div>
 		<?php } ?>
 	</div>
@@ -97,7 +116,7 @@
 			    echo '</tr>';
 
 			    // les 2 plages horaires : matin - midi
-			    for ($h = 0; $h < 24; $h++)
+			    for ($h = 1; $h < 25; $h++)
 			    {
 					if($h==$heure+1) {
 						echo '<tr>
@@ -114,12 +133,17 @@
 			        // les infos pour chaque jour
 		            for ($j = 0; $j < 7; $j++)
 		            {
-						if($j==$jour && $h==$heure+1 && date("U", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee'])) == date("U", mktime(0,0,0,date('n'),date('j'),date('y'))))
+						if($j==$jour-1 && $h==$heure+1 && date("U", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee'])) == date("U", mktime(0,0,0,date('n'),date('j'),date('y'))))
 						{
-							
-							if(!is_null($heure_jour[$h-1][$j])) {
 
-								$r = rand(1,4);
+							if(!is_null($heure_jour[$h-1][$j])) {
+								if(!is_null($heure_jour[$h-2][$j]) && $heure_jour[$h-2][$j]->titre()==$heure_jour[$h-1][$j]->titre())
+								{
+
+								}
+								else {
+									$r = rand(1,4);
+								}
 								if($r == 1) { $color = '#0000FF'; }
 								else if($r == 2) { $color = '#FF0033'; }
 								else if($r == 3) { $color = '#FFFF33'; }
@@ -136,7 +160,13 @@
 							if($j==5 || $j==6){
 								if(!is_null($heure_jour[$h-1][$j])) {
 
-									$r = rand(1,4);
+									if(!is_null($heure_jour[$h-2][$j]) && $heure_jour[$h-2][$j]->titre()==$heure_jour[$h-1][$j]->titre())
+									{
+
+									}
+									else {
+										$r = rand(1,4);
+									}
 									if($r == 1) { $color = '#0000FF'; }
 									else if($r == 2) { $color = '#FF0033'; }
 									else if($r == 3) { $color = '#FFFF33'; }
@@ -152,7 +182,13 @@
 							else {
 								if(!is_null($heure_jour[$h-1][$j])) {
 
-									$r = rand(1,4);
+									if(!is_null($heure_jour[$h-2][$j]) && $heure_jour[$h-2][$j]->titre()==$heure_jour[$h-1][$j]->titre())
+									{
+
+									}
+									else {
+										$r = rand(1,4);
+									}
 									if($r == 1) { $color = '#0000FF'; }
 									else if($r == 2) { $color = '#FF0033'; }
 									else if($r == 3) { $color = '#FFFF33'; }

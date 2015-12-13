@@ -200,18 +200,6 @@ class Activite extends Model_Base
         :idSimilaire,
         :titre, :descriptif, :posGeographique, :dateDeb, :dateFin, :numSemaine, :numJour, :periodicite, :occurences,
         :priorite)');
-			/*echo $this->_idAgenda.' ';
-			echo $this->_idSimilaire.' ';
-			echo $this->_titre.' ';
-			echo $this->_descriptif.' ';
-			echo $this->_posGeographique.' ';
-			echo $this->_dateDeb.' ';
-			echo $this->_dateFin.' ';
-			echo $this->_numSemaine.' ';
-			echo $this->_numJour.' ';
-			echo $this->_periodicite.' ';
-			echo $this->_occurences.' ';
-			echo $this->_priorite.' ';*/
 
       $q->bindValue(':idAgenda', $this->_idAgenda, PDO::PARAM_INT);
       //$q->bindValue(':idCategorie', $this->_idCategorie, PDO::PARAM_INT);

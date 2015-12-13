@@ -124,15 +124,6 @@ class Agenda extends Model_Base
 		}
 	}
 
-	public function delete()
-	{
-		if(!is_null($this->_idAgenda)) {
-			$q = self::$_db->prepare('DELETE FROM AGENDA WHERE idAgenda = :id');
-			$q->bindValue(':id', $this->_idAgenda);
-			$q->execute();
-			$this->_idAgenda = null;
-		}
-	}
 
 	public function delete_by_user()
 	{
@@ -158,6 +149,45 @@ class Agenda extends Model_Base
 	public static function get_by_user_public($idUtilisateur) {
 		$s = self::$_db->prepare('SELECT * FROM AGENDA where idUtilisateur = :id AND prive = 0');
 		$s->bindValue(':id', $idUtilisateur, PDO::PARAM_INT);
+		$s->execute();
+		$agendas = array();
+		while ($data = $s->fetch(PDO::FETCH_ASSOC)) {
+			$agendas[] = new Agenda($data['idAgenda'], $data['idUtilisateur'], $data['nom'], $data['description'], $data['dateCreation'], $data['dateUpdate'], $data['intersection'], $data['prive']);
+		}
+		return $agendas;
+	}
+
+	public static function get_all() {
+		$s = self::$_db->prepare('SELECT * FROM AGENDA');
+		$s->execute();
+		$agendas = array();
+		while ($data = $s->fetch(PDO::FETCH_ASSOC)) {
+			$agendas[] = new Agenda($data['idAgenda'], $data['idUtilisateur'], $data['nom'], $data['description'], $data['dateCreation'], $data['dateUpdate'], $data['intersection'], $data['prive']);
+		}
+		return $agendas;
+	}
+
+	public function supprimer() {
+	$s = self::$_db->prepare('DELETE FROM AGENDA where idAgenda = :id');
+		$s->bindValue(':id', $this->_idAgenda, PDO::PARAM_INT);
+		$s->execute();
+	}
+
+	public static function get_by_name_public($nom) {
+		$s = self::$_db->prepare('SELECT * FROM AGENDA where nom= :nom AND prive = 0');
+		$s->bindValue(':nom', $nom, PDO::PARAM_STR);
+		$s->execute();
+		$agendas = array();
+		while ($data = $s->fetch(PDO::FETCH_ASSOC)) {
+			$agendas[] = new Agenda($data['idAgenda'], $data['idUtilisateur'], $data['nom'], $data['description'], $data['dateCreation'], $data['dateUpdate'], $data['intersection'], $data['prive']);
+		}
+		return $agendas;
+	}
+
+	public static function get_by_desc_public($descr) {
+		$descr='%'.$descr.'%';
+		$s = self::$_db->prepare('SELECT * FROM AGENDA where description LIKE :descr AND prive = 0');
+		$s->bindValue(':descr', $descr, PDO::PARAM_STR);
 		$s->execute();
 		$agendas = array();
 		while ($data = $s->fetch(PDO::FETCH_ASSOC)) {

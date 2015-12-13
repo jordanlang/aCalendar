@@ -27,19 +27,22 @@ class Controller_Calendar
 				if(isset($_SESSION['user'])) {
 					$_SESSION['num'] = 0;
 
-					$abonnements = Abonnement::get_by_user($_SESSION['idUser']);
+					$abonnement = Abonnement::get_by_user($_SESSION['idUser']);
 					$mes_agendas = Agenda::get_by_user_login($_SESSION['user']);
 					$all_agendas = array();
+					$abonnements=array();
 					for($i=0; $i<count($mes_agendas); $i++) {
 						$all_agendas[] = Agenda::get_by_id($mes_agendas[$i]->idAgenda());
 					}
-					for($i=0; $i<count($abonnements); $i++) {
-						$all_agendas[] = Agenda::get_by_id($abonnements[$i]->idAgenda());
+					for($i=0; $i<count($abonnement); $i++) {
+
+						$abonnements[] = Agenda::get_by_id($abonnement[$i]->idAgenda());
+						$all_agendas[] = $abonnements[$i];
 					}
 
 					if(!empty($all_agendas))
 					{
-						$activites = Activite::get_by_idUtilisateurAgendaDate($_SESSION['idUser'],$all_agendas[$_SESSION['num']]->idAgenda(),$dateDebSemaineFr,$dateFinSemaineFr);
+						$activites = Activite::get_by_idUtilisateurAgendaDate($all_agendas[$_SESSION['num']]->idUtilisateur(),$all_agendas[$_SESSION['num']]->idAgenda(),$dateDebSemaineFr,$dateFinSemaineFr);
 						for($m=0;$m<count($activites);$m++)
 						{
 							for($l=0;$l<24;$l++)
@@ -83,6 +86,11 @@ class Controller_Calendar
 	public function show_other_calendar($numero) {
 		switch ($_SERVER['REQUEST_METHOD']) {
 			case 'GET' :
+				$jour = date("w");
+
+				$_SESSION['mois'] = date("n");
+				$_SESSION['jour'] = date("j");
+				$_SESSION['annee'] = date("y");
 
 				$dateDebSemaineFr = date("Y-n-j H:i:s", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour']-$jour+1,$_SESSION['annee']));
 				$datePrecise = date("Y-n-j H:i:s", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee']));
@@ -91,19 +99,21 @@ class Controller_Calendar
 				if(isset($_SESSION['user'])) {
 					$_SESSION['num'] = $numero;
 
-					$abonnements = Abonnement::get_by_user($_SESSION['idUser']);
+					$abonnement = Abonnement::get_by_user($_SESSION['idUser']);
 					$mes_agendas = Agenda::get_by_user_login($_SESSION['user']);
 					$all_agendas = array();
+					$abonnements=array();
 					for($i=0; $i<count($mes_agendas); $i++) {
 						$all_agendas[] = Agenda::get_by_id($mes_agendas[$i]->idAgenda());
 					}
-					for($i=0; $i<count($abonnements); $i++) {
-						$all_agendas[] = Agenda::get_by_id($abonnements[$i]->idAgenda());
+					for($i=0; $i<count($abonnement); $i++) {
+						$abonnements[] = Agenda::get_by_id($abonnement[$i]->idAgenda());
+						$all_agendas[] = Agenda::get_by_id($abonnement[$i]->idAgenda());
 					}
-					
+
 					if(!empty($all_agendas))
 					{
-						$activites = Activite::get_by_idUtilisateurAgendaDate($_SESSION['idUser'],$all_agendas[$_SESSION['num']]->idAgenda(),$dateDebSemaineFr,$dateFinSemaineFr);
+						$activites = Activite::get_by_idUtilisateurAgendaDate($all_agendas[$_SESSION['num']]->idUtilisateur(),$all_agendas[$_SESSION['num']]->idAgenda(),$dateDebSemaineFr,$dateFinSemaineFr);
 						for($m=0;$m<count($activites);$m++)
 						{
 							for($l=0;$l<24;$l++)
@@ -176,12 +186,12 @@ class Controller_Calendar
 						$n->add();
 						$_SESSION['message']['type'] = 'success';
 						$_SESSION['message']['text'] = "L'agenda ".$_POST['title']." a bien été créé.";
-						$this->show_calendar();
+						include 'views/home.php';
 					}
 					else {
 						$_SESSION['message']['type'] = 'error';
 						$_SESSION['message']['text'] = 'Données postées incomplètes';
-						$this->show_calendar();
+						include 'views/home.php';
 					}
 				}
 				else {
@@ -201,7 +211,6 @@ class Controller_Calendar
 					$cat = Categorie::get_all();
 					$u = Utilisateur::get_by_login($_SESSION['user']);
 					$agendas = Agenda::get_by_user($u->idUtilisateur());
-					echo count($agendas);
 					include 'views/createActivite.php';
 				}
 				else {
@@ -216,25 +225,31 @@ class Controller_Calendar
 					$u = Utilisateur::get_by_login($_SESSION['user']);
 
 					if(!empty($_POST['titre']) && !empty($_POST['description']) && !empty($_POST['location']) && !empty($_POST['datedeb']) && !empty($_POST['datefin'])) {
-						
+
 						if(empty($_POST['occurences'])) {
 							$occ = 0;
 						} else {
 							$occ = $_POST['occurences'];
 						}
+						if(empty($_POST['periodicite'])) {
+							$periodicite = 'p';
+						} else {
+							$periodicite = $_POST['periodicite'];
+						}
 
 						$date_debut = date_create_from_format('Y-n-j?H:i', $_POST['datedeb']);
-						$date_debut = $date_debut->format('Y-n-j H:i');
+						$date_debut = $date_debut->format('Y-n-j H');
 
 						$date_fin = date_create_from_format('Y-n-j?H:i', $_POST['datefin']);
-						$date_fin = $date_fin->format('Y-n-j H:i');
+						$date_fin = $date_fin->format('Y-n-j H');
 
-						$act = new Activite(1, $_POST['agenda'], $_POST['categorie'], $_SESSION['similaire'], $_POST['titre'], $_POST['description'], $_POST['location'], '1', '1', $date_debut, $date_fin, 1, 1, $_POST['periodicite'], $occ, $_POST['priorite']);
+
+						$act = new Activite(1, $_POST['agenda'], $_POST['categorie'], $_SESSION['similaire'], $_POST['titre'], $_POST['description'], $_POST['location'], '1', '1', $date_debut, $date_fin, 1, 1, $periodicite, $occ, $_POST['priorite']);
 						$act->add();
 
 						$_SESSION['message']['type'] = 'success';
 						$_SESSION['message']['text'] = "L'activité ".$_POST['titre']." a bien été créée.";
-						$this->show_calendar();
+						include 'views/home.php';
 					}
 					else {
 						$_SESSION['message']['type'] = 'error';
@@ -277,19 +292,21 @@ class Controller_Calendar
 				$datePrecise = date("Y-n-j H:i:s", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee']));
 				$dateFinSemaineFr = date("Y-n-j H:i:s", mktime(23,59,0,$_SESSION['mois'],$_SESSION['jour']-$jour+7,$_SESSION['annee']));
 
-					$abonnements = Abonnement::get_by_user($_SESSION['idUser']);
-					$mes_agendas = Agenda::get_by_user_login($_SESSION['user']);
-					$all_agendas = array();
-					for($i=0; $i<count($mes_agendas); $i++) {
-						$all_agendas[] = Agenda::get_by_id($mes_agendas[$i]->idAgenda());
-					}
-					for($i=0; $i<count($abonnements); $i++) {
-						$all_agendas[] = Agenda::get_by_id($abonnements[$i]->idAgenda());
-					}
+				$abonnement = Abonnement::get_by_user($_SESSION['idUser']);
+				$mes_agendas = Agenda::get_by_user_login($_SESSION['user']);
+				$all_agendas = array();
+				$abonnements=array();
+				for($i=0; $i<count($mes_agendas); $i++) {
+					$all_agendas[] = Agenda::get_by_id($mes_agendas[$i]->idAgenda());
+				}
+				for($i=0; $i<count($abonnement); $i++) {
+					$abonnements[] = Agenda::get_by_id($abonnement[$i]->idAgenda());
+					$all_agendas[] = Agenda::get_by_id($abonnement[$i]->idAgenda());
+				}
 
 					if(!empty($all_agendas))
 					{
-						$activites = Activite::get_by_idUtilisateurAgendaDate($_SESSION['idUser'],$all_agendas[$_SESSION['num']]->idAgenda(),$dateDebSemaineFr,$dateFinSemaineFr);
+						$activites = Activite::get_by_idUtilisateurAgendaDate($all_agendas[$_SESSION['num']]->idUtilisateur(),$all_agendas[$_SESSION['num']]->idAgenda(),$dateDebSemaineFr,$dateFinSemaineFr);
 						for($m=0;$m<count($activites);$m++)
 						{
 							for($l=0;$l<24;$l++)
@@ -307,7 +324,7 @@ class Controller_Calendar
 							}
 						}
 					}
-					
+
 					include 'views/calendar.php';
 				}
 				else {
@@ -356,19 +373,21 @@ class Controller_Calendar
 				$datePrecise = date("Y-n-j H:i:s", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee']));
 				$dateFinSemaineFr = date("Y-n-j H:i:s", mktime(23,59,0,$_SESSION['mois'],$_SESSION['jour']-$jour+7,$_SESSION['annee']));
 
-					$abonnements = Abonnement::get_by_user($_SESSION['idUser']);
-					$mes_agendas = Agenda::get_by_user_login($_SESSION['user']);
-					$all_agendas = array();
-					for($i=0; $i<count($mes_agendas); $i++) {
-						$all_agendas[] = Agenda::get_by_id($mes_agendas[$i]->idAgenda());
-					}
-					for($i=0; $i<count($abonnements); $i++) {
-						$all_agendas[] = Agenda::get_by_id($abonnements[$i]->idAgenda());
-					}
+				$abonnement = Abonnement::get_by_user($_SESSION['idUser']);
+				$mes_agendas = Agenda::get_by_user_login($_SESSION['user']);
+				$all_agendas = array();
+				$abonnements=array();
+				for($i=0; $i<count($mes_agendas); $i++) {
+					$all_agendas[] = Agenda::get_by_id($mes_agendas[$i]->idAgenda());
+				}
+				for($i=0; $i<count($abonnement); $i++) {
+					$abonnements[] = Agenda::get_by_id($abonnement[$i]->idAgenda());
+					$all_agendas[] = Agenda::get_by_id($abonnement[$i]->idAgenda());
+				}
 
 					if(!empty($all_agendas))
 					{
-						$activites = Activite::get_by_idUtilisateurAgendaDate($_SESSION['idUser'],$all_agendas[$_SESSION['num']]->idAgenda(),$dateDebSemaineFr,$dateFinSemaineFr);
+						$activites = Activite::get_by_idUtilisateurAgendaDate($all_agendas[$_SESSION['num']]->idUtilisateur(),$all_agendas[$_SESSION['num']]->idAgenda(),$dateDebSemaineFr,$dateFinSemaineFr);
 						for($m=0;$m<count($activites);$m++)
 						{
 							for($l=0;$l<24;$l++)
@@ -414,6 +433,8 @@ class Controller_Calendar
 			case 'GET' :
 				//si l'utilisateur est connecté on affiche la page de création d'une note
 				if(isset($_SESSION['user'])) {
+
+
 					$jour = date("w");
 
 					$_SESSION['mois'] = date("n");
@@ -424,19 +445,21 @@ class Controller_Calendar
 				$datePrecise = date("Y-n-j H:i:s", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee']));
 				$dateFinSemaineFr = date("Y-n-j H:i:s", mktime(23,59,0,$_SESSION['mois'],$_SESSION['jour']-$jour+7,$_SESSION['annee']));
 
-					$abonnements = Abonnement::get_by_user($_SESSION['idUser']);
-					$mes_agendas = Agenda::get_by_user_login($_SESSION['user']);
-					$all_agendas = array();
-					for($i=0; $i<count($mes_agendas); $i++) {
-						$all_agendas[] = Agenda::get_by_id($mes_agendas[$i]->idAgenda());
-					}
-					for($i=0; $i<count($abonnements); $i++) {
-						$all_agendas[] = Agenda::get_by_id($abonnements[$i]->idAgenda());
-					}
+				$abonnement = Abonnement::get_by_user($_SESSION['idUser']);
+				$mes_agendas = Agenda::get_by_user_login($_SESSION['user']);
+				$all_agendas = array();
+				$abonnements=array();
+				for($i=0; $i<count($mes_agendas); $i++) {
+					$all_agendas[] = Agenda::get_by_id($mes_agendas[$i]->idAgenda());
+				}
+				for($i=0; $i<count($abonnement); $i++) {
+					$abonnements[] = Agenda::get_by_id($abonnement[$i]->idAgenda());
+					$all_agendas[] = Agenda::get_by_id($abonnement[$i]->idAgenda());
+				}
 
 					if(!empty($all_agendas))
 					{
-						$activites = Activite::get_by_idUtilisateurAgendaDate($_SESSION['idUser'],$all_agendas[$_SESSION['num']]->idAgenda(),$dateDebSemaineFr,$dateFinSemaineFr);
+						$activites = Activite::get_by_idUtilisateurAgendaDate($all_agendas[$_SESSION['num']]->idUtilisateur(),$all_agendas[$_SESSION['num']]->idAgenda(),$dateDebSemaineFr,$dateFinSemaineFr);
 						for($m=0;$m<count($activites);$m++)
 						{
 							for($l=0;$l<24;$l++)
@@ -475,4 +498,20 @@ class Controller_Calendar
 				break;
 		}
 	}
+
+	public function supprimer($id) {
+
+    if(isset($_SESSION['user'])) {
+			$_SESSION['message']['type'] = 'success';
+      $_SESSION['message']['text'] = "Agenda supprimé";
+			$u=Agenda::get_by_id($id);
+      $u->supprimer();
+      include 'views/home.php';
+    }
+    else {
+      $_SESSION['message']['type'] = 'error';
+      $_SESSION['message']['text'] = "You aren't connected";
+      include 'views/connexion.php';
+    }
+  }
 }

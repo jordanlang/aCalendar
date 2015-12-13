@@ -14,7 +14,8 @@
 		<input type="submit" value="Validate">
 	</div>
 </form>
-
+<div style="width: 70%; margin: 2rem auto;">
 <p>No account yet ? -> <a href="<?=BASEURL?>/index.php/user/signup">Sign up !</a><p>
 <p>Or connect with -> <a href="<?=BASEURL?>/Connexion/index.php?logon=">CAS</a><p>
+</div>
 </div>
