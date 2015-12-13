@@ -1,7 +1,3 @@
-<?php
-	require_once 'models/agenda.php';
-	require_once 'models/categorie.php';
-?>
 <div class="create">
 <h2 class="text-center">Création d'une nouvelle activité</h2>
 

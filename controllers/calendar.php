@@ -226,27 +226,150 @@ class Controller_Calendar
 
 					if(!empty($_POST['titre']) && !empty($_POST['description']) && !empty($_POST['location']) && !empty($_POST['datedeb']) && !empty($_POST['datefin'])) {
 
+						$date_debut = date_create_from_format('Y-n-j?H:i', $_POST['datedeb']);
+						$date_debut_ts = $date_debut->format('U');
+						$heure_debut = $date_debut->format('H');
+						$jour_debut = $date_debut->format('j');
+						$mois_debut = $date_debut->format('n');
+						$annee_debut = $date_debut->format('Y');
+						$date_debut = $date_debut->format('Y-n-j H');
+
+						$date_fin = date_create_from_format('Y-n-j?H:i', $_POST['datefin']);
+						$date_fin_ts = $date_fin->format('U');
+						$heure_fin = $date_fin->format('H');
+						$jour_fin = $date_fin->format('j');
+						$mois_fin = $date_fin->format('n');
+						$annee_fin = $date_fin->format('Y');
+						$date_fin = $date_fin->format('Y-n-j H');
+
+						if(empty($_POST['periodicite'])) {
+							$periodicite = 'P';
+						} else {
+							$periodicite = $_POST['periodicite'];
+						}
 						if(empty($_POST['occurences'])) {
 							$occ = 0;
 						} else {
 							$occ = $_POST['occurences'];
 						}
-						if(empty($_POST['periodicite'])) {
-							$periodicite = 'p';
-						} else {
-							$periodicite = $_POST['periodicite'];
-						}
 
-						$date_debut = date_create_from_format('Y-n-j?H:i', $_POST['datedeb']);
-						$date_debut = $date_debut->format('Y-n-j H');
-
-						$date_fin = date_create_from_format('Y-n-j?H:i', $_POST['datefin']);
-						$date_fin = $date_fin->format('Y-n-j H');
-
-
+						$_SESSION['similaire']++;
 						$act = new Activite(1, $_POST['agenda'], $_POST['categorie'], $_SESSION['similaire'], $_POST['titre'], $_POST['description'], $_POST['location'], '1', '1', $date_debut, $date_fin, 1, 1, $periodicite, $occ, $_POST['priorite']);
 						$act->add();
 
+						if($occ > 1) {
+							if($periodicite == 'J') {
+								while($occ > 1) {
+									$nb_jours = date("t", $date_debut_ts);
+									if($jour_debut+1 > $nb_jours) {
+										if($mois_debut >= 12) {
+											$mois_debut = 1;
+											$annee_debut = $annee_debut + 1;
+										} else {
+											$mois_debut = $mois_debut + 1;
+										}
+										$jour_debut = ($jour_debut+1) - $nb_jours;
+									} else {
+										$jour_debut = $jour_debut+1;
+									}
+
+									$nb_jours = date("t", $date_fin_ts);
+									if($jour_fin+1 > $nb_jours) {
+										if($mois_fin >= 12) {
+											$mois_fin = 1;
+											$annee_fin = $annee_fin + 1;
+										} else {
+											$mois_fin = $mois_fin + 1;
+										}
+										$jour_fin = ($jour_fin+1) - $nb_jours;
+									} else {
+										$jour_fin = $jour_fin+1;
+									}
+
+									$date_debut_ts = date('U', mktime(0,0,0,$mois_debut,$jour_debut,$annee_debut));
+									$date_fin_ts = date('U', mktime(0,0,0,$mois_fin,$jour_fin,$annee_fin));
+									$date_debut = date('Y-n-j H', mktime($heure_debut,0,0,$mois_debut,$jour_debut,$annee_debut));
+									$date_fin = date('Y-n-j H', mktime($heure_fin,0,0,$mois_fin,$jour_fin,$annee_fin));
+
+									$occ = $occ - 1;
+									$act = new Activite(1, $_POST['agenda'], $_POST['categorie'], $_SESSION['similaire'], $_POST['titre'], $_POST['description'], $_POST['location'], '1', '1', $date_debut, $date_fin, 1, 1, $periodicite, $occ, $_POST['priorite']);
+									$act->add();
+								}
+							} else if ($periodicite == 'S') {
+								while($occ > 1) {
+									$nb_jours = date("t", $date_debut_ts);
+									if($jour_debut+7 > $nb_jours) {
+										if($mois_debut >= 12) {
+											$mois_debut = 1;
+											$annee_debut = $annee_debut + 1;
+										} else {
+											$mois_debut = $mois_debut + 1;
+										}
+										$jour_debut = ($jour_debut+7) - $nb_jours;
+									} else {
+										$jour_debut = $jour_debut+7;
+									}
+
+									$nb_jours = date("t", $date_fin_ts);
+									if($jour_fin+7 > $nb_jours) {
+										if($mois_fin >= 12) {
+											$mois_fin = 1;
+											$annee_fin = $annee_fin + 1;
+										} else {
+											$mois_fin = $mois_fin + 1;
+										}
+										$jour_fin = ($jour_fin+7) - $nb_jours;
+									} else {
+										$jour_fin = $jour_fin+7;
+									}
+
+									$date_debut_ts = date('U', mktime(0,0,0,$mois_debut,$jour_debut,$annee_debut));
+									$date_fin_ts = date('U', mktime(0,0,0,$mois_fin,$jour_fin,$annee_fin));
+									$date_debut = date('Y-n-j H', mktime($heure_debut,0,0,$mois_debut,$jour_debut,$annee_debut));
+									$date_fin = date('Y-n-j H', mktime($heure_fin,0,0,$mois_fin,$jour_fin,$annee_fin));
+
+									$occ = $occ - 1;
+									$act = new Activite(1, $_POST['agenda'], $_POST['categorie'], $_SESSION['similaire'], $_POST['titre'], $_POST['description'], $_POST['location'], '1', '1', $date_debut, $date_fin, 1, 1, $periodicite, $occ, $_POST['priorite']);
+									$act->add();
+								}
+							} else if ($periodicite == 'M') {
+								while($occ > 1) {
+									if($mois_debut >= 12) {
+										$mois_debut = 1;
+										$annee_debut = $annee_debut + 1;
+									} else {
+										$mois_debut = $mois_debut + 1;
+									}
+
+									if($mois_fin >= 12) {
+										$mois_fin = 1;
+										$annee_fin = $annee_fin + 1;
+									} else {
+										$mois_fin = $mois_fin + 1;
+									}
+
+									$date_debut = date('Y-n-j H', mktime($heure_debut,0,0,$mois_debut,$jour_debut,$annee_debut));
+									$date_fin = date('Y-n-j H', mktime($heure_fin,0,0,$mois_fin,$jour_fin,$annee_fin));
+
+									$occ = $occ - 1;
+									$act = new Activite(1, $_POST['agenda'], $_POST['categorie'], $_SESSION['similaire'], $_POST['titre'], $_POST['description'], $_POST['location'], '1', '1', $date_debut, $date_fin, 1, 1, $periodicite, $occ, $_POST['priorite']);
+									$act->add();
+								}
+							} else if ($periodicite == 'A') {
+								while($occ > 1) {
+									$annee_debut = $annee_debut + 1;
+									$annee_fin = $annee_fin + 1;
+
+									$date_debut = date('Y-n-j H', mktime($heure_debut,0,0,$mois_debut,$jour_debut,$annee_debut));
+									$date_fin = date('Y-n-j H', mktime($heure_fin,0,0,$mois_fin,$jour_fin,$annee_fin));
+
+									$occ = $occ - 1;
+									$act = new Activite(1, $_POST['agenda'], $_POST['categorie'], $_SESSION['similaire'], $_POST['titre'], $_POST['description'], $_POST['location'], '1', '1', $date_debut, $date_fin, 1, 1, $periodicite, $occ, $_POST['priorite']);
+									$act->add();
+								}
+							}
+						}
+						
 						$_SESSION['message']['type'] = 'success';
 						$_SESSION['message']['text'] = "L'activité ".$_POST['titre']." a bien été créée.";
 						include 'views/home.php';

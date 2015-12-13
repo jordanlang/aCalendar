@@ -84,7 +84,7 @@ class Pause extends Model_Base
 			$q->bindValue(':dateDeb', $this->_dateDeb, PDO::PARAM_STR);
 			$q->bindValue(':dateFin', $this->_dateFin, PDO::PARAM_STR);
 			$q->bindValue(':periodicite', $this->_periodicite, PDO::PARAM_STR);
-			$q->bindValue(':occurences', $this->_occurences, PDO::PARAM_STR);
+			$q->bindValue(':occurences', $this->_occurences, PDO::PARAM_INT);
 			$q->execute();
 		}
 	}

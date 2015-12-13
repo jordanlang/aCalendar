@@ -176,9 +176,22 @@ class Utilisateur extends Model_Base
 	}
 
 	public function be_admin() {
-		$s = self::$_db->prepare('UPDATE INTO UTILISATEUR SET admin=1 WHERE idUtilisateur= :id');
+		$s = self::$_db->prepare('UPDATE UTILISATEUR SET admin=1 WHERE idUtilisateur= :id');
 		$s->bindValue(':id', $this->_idUtilisateur, PDO::PARAM_INT);
 		$s->execute();
+	}
+
+	public static function is_admin($pseudo) {
+		$s = self::$_db->prepare('SELECT * FROM UTILISATEUR where pseudo = :pseudo AND admin = 1');
+		$s->bindValue(':pseudo', $pseudo, PDO::PARAM_STR);
+		$s->execute();
+		$data = $s->fetch(PDO::FETCH_ASSOC);
+		if($data) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	public static function exist($pseudo) {

@@ -57,8 +57,9 @@ if(!isset($_SESSION['mois'])) {
 	$_SESSION['mois'] = date("n");
 	$_SESSION['jour'] = date("j");
 	$_SESSION['annee'] = date("y");
-	$_SESSION['similaire'] = 1;
+	$_SESSION['similaire'] = 0;
 	$_SESSION['num'] = 0;
+	$_SESSION['admin'] = 0;
 }
 
 $content = ob_get_clean();

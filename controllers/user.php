@@ -12,6 +12,9 @@ class Controller_User
 			case 'GET' :
 				if (isset($_SESSION['user'])) {
 					$_SESSION['user'] = $u->pseudo();
+					if(Utilisateur::is_admin($_SESSION['user'])) {
+						$_SESSION['admin'] = 1;
+					}
 					show_message('message_success',"You're already connected as ".$_SESSION['user']);
 					include 'views/home.php';
 				}
@@ -29,7 +32,9 @@ class Controller_User
 						{
 							$_SESSION['user'] = $u->pseudo();
 							$_SESSION['idUser'] = $u->idUtilisateur();
-							$_SESSION['admin']=$u->admin();
+							if(Utilisateur::is_admin($_SESSION['user'])) {
+								$_SESSION['admin'] = 1;
+							}
 							show_message('message_success',"Vous êtes connecté");
 							include 'views/home.php';
 						}
@@ -177,18 +182,19 @@ class Controller_User
 
 	public function admin($id) {
 
-    if(isset($_SESSION['user'])) {
-			$u=Utilisateur::get_by_id($id);
-			$_SESSION['message']['type'] = 'success';
-      $_SESSION['message']['text'] = "Droit donné à ".$u->pseudo();
+	    if(isset($_SESSION['user'])) {
+				$u=Utilisateur::get_by_id($id);
+				$_SESSION['message']['type'] = 'success';
+	      $_SESSION['message']['text'] = "Droit donné à ".$u->pseudo();
 
-      $u->be_admin();
-      include 'views/home.php';
-    }
-    else {
-      $_SESSION['message']['type'] = 'error';
-      $_SESSION['message']['text'] = "You aren't connected";
-      include 'views/connexion.php';
-    }
+	      $u->be_admin();
+	      $_SESSION['admin'] = 1;
+	      include 'views/home.php';
+	    }
+	    else {
+	      $_SESSION['message']['type'] = 'error';
+	      $_SESSION['message']['text'] = "You aren't connected";
+	      include 'views/connexion.php';
+	    }
   }
 }

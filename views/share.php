@@ -1,8 +1,4 @@
-<?php
-require_once 'models/agenda.php';
-require_once 'models/abonnement.php';
-require_once 'models/utilisateur.php';
-?>
+<?php require_once 'models/abonnement.php'; ?>
 <div class="create">
 <h2 class="text-center">Mes abonnements</h2>
 
@@ -13,14 +9,14 @@ require_once 'models/utilisateur.php';
 </form>
 
 <form method="post" action="<?=BASEURL?>/index.php/share/search_by_name">
-	<label for="recherche">Rechercher les agendas par nom</label>
+	<label for="nom">Rechercher les agendas par nom</label>
 	<input type="text" id="nom" name="nom">
 	<input type="submit" value="Rechercher">
 </form>
 
 <form method="post" action="<?=BASEURL?>/index.php/share/search_by_desc">
-	<label for="recherche">Rechercher les agendas par un mot clef du descriptif</label>
-	<input type="text" id="recherche" name="desc">
+	<label for="desc">Rechercher les agendas par un mot clef du descriptif</label>
+	<input type="text" id="desc" name="desc">
 	<input type="submit" value="Rechercher">
 </form>
 

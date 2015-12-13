@@ -7,7 +7,7 @@
     <label for="title" style="font-size: 2rem;
     margin-right: 4rem;
     color:rgb(200,240,200);
-    font-weight: bold;"><?echo $a[$i]->nom()?></label>
+    font-weight: bold;"><?php echo $a[$i]->nom().' ('.$users[$i]->pseudo().')'?></label>
     <button type="submit" formaction="<?=BASEURL?>/index.php/calendar/supprimer/<?echo $a[$i]->idAgenda()?>">Supprimer cet agenda</button>
     <br>
     <br>

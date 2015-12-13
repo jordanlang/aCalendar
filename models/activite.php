@@ -324,10 +324,29 @@ class Activite extends Model_Base
 	}
 
 	public static function get_by_idUtilisateurAgendaDate($idUtilisateur,$idAgenda,$date_debut, $date_fin) {
-    	//$s = self::$_db->prepare('SELECT * FROM ACTIVITE where idUtilisateur =:id');
     	$s = self::$_db->prepare('SELECT * FROM ACTIVITE ac JOIN AGENDA ag ON ac.idAgenda = ag.idAgenda where ag.idUtilisateur = :id AND ac.idAgenda = :idAgenda AND ac.dateDeb >= :dateDeb AND ac.dateFin < :dateFin');
 		$s->bindValue(':id', $idUtilisateur, PDO::PARAM_INT);
 		$s->bindValue(':idAgenda', $idAgenda, PDO::PARAM_INT);
+		$s->bindValue(':dateDeb', $date_debut, PDO::PARAM_STR);
+		$s->bindValue(':dateFin', $date_fin, PDO::PARAM_STR);
+		$s->execute();
+    $activites = array();
+		while($data = $s->fetch(PDO::FETCH_ASSOC)) {
+			$activites[] = new Activite($data['idActivite'],$data['idAgenda'],
+        $data['idCategorie'],$data['idSimilaire'],$data['titre'],
+        $data['descriptif'],$data['posGeographique'],$data['dateCreation'],
+        $data['dateUpdate'], $data['dateDeb'],$data['dateFin'],
+        $data['numSemaine'],$data['numJour'],$data['periodicite'],
+        $data['occurences'],$data['priorite']);
+		}
+		return $activites;
+	}
+
+	public static function get_by_idUtilisateurAgendaDateSimilaire($idUtilisateur,$idAgenda,$idSimilaire,$date_debut, $date_fin) {
+    	$s = self::$_db->prepare('SELECT * FROM ACTIVITE ac JOIN AGENDA ag ON ac.idAgenda = ag.idAgenda where ag.idUtilisateur = :id AND ac.idAgenda = :idAgenda AND ac.idSimilaire=:idSimilaire AND ac.dateDeb >= :dateDeb AND ac.dateFin < :dateFin');
+		$s->bindValue(':id', $idUtilisateur, PDO::PARAM_INT);
+		$s->bindValue(':idAgenda', $idAgenda, PDO::PARAM_INT);
+		$s->bindValue(':idSimilaire', $idSimilaire, PDO::PARAM_INT);
 		$s->bindValue(':dateDeb', $date_debut, PDO::PARAM_STR);
 		$s->bindValue(':dateFin', $date_fin, PDO::PARAM_STR);
 		$s->execute();
