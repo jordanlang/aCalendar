@@ -131,18 +131,19 @@
 					}
 
 			        // les infos pour chaque jour
-		            for ($j = 0; $j < 7; $j++)
-		            {
+          for ($j = 0; $j < 7; $j++)
+          {
 						if($j==$jour-1 && $h==$heure+1 && date("U", mktime(0,0,0,$_SESSION['mois'],$_SESSION['jour'],$_SESSION['annee'])) == date("U", mktime(0,0,0,date('n'),date('j'),date('y'))))
 						{
 
 							if(!is_null($heure_jour[$h-1][$j])) {
 								if(!is_null($heure_jour[$h-2][$j]) && $heure_jour[$h-2][$j]->titre()==$heure_jour[$h-1][$j]->titre())
 								{
-
+									$r=$color[$h-2][$j];
 								}
 								else {
 									$r = rand(1,4);
+									$color[$h-1][$j]=r;
 								}
 								if($r == 1) { $color = '#0000FF'; }
 								else if($r == 2) { $color = '#FF0033'; }
