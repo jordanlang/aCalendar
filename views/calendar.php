@@ -140,10 +140,11 @@
 								if(!is_null($heure_jour[$h-2][$j]) && $heure_jour[$h-2][$j]->titre()==$heure_jour[$h-1][$j]->titre())
 								{
 									$r=$color[$h-2][$j];
+									$color[$h-1][$j]=$r;
 								}
 								else {
 									$r = rand(1,4);
-									$color[$h-1][$j]=r;
+									$color[$h-1][$j]=$r;
 								}
 								if($r == 1) { $color = '#0000FF'; }
 								else if($r == 2) { $color = '#FF0033'; }
